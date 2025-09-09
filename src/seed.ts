@@ -2,6 +2,7 @@ import { AccessType, PrismaClient } from '../prisma/generated/prisma'
 import fs from 'fs'
 import csvParser from 'csv-parser'
 import path from 'path'
+import { providerManager } from './utils/providerHooks'
 
 const prisma = new PrismaClient()
 
@@ -199,7 +200,58 @@ async function seed() {
       })
     }
 
+    // Register mock providers for game results
+    providerManager.registerProvider('mock-api', {
+      type: 'api',
+      url: 'https://mock-api.example.com',
+      headers: { 'Authorization': 'Bearer mock-token' }
+    });
+
+    providerManager.registerProvider('mock-webhook', {
+      type: 'webhook',
+      url: 'https://mock-webhook.example.com/game-results',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    // Create mock game results
+    const mockGames = [
+      {
+        gameId: '2',
+        status: 'COMPLETED' as const,
+        outcome: 'WIN' as const,
+        winner: 'Player1',
+        loser: 'Player2',
+        score: { player1: 3, player2: 1 },
+        provider: 'mock-provider'
+      },
+      {
+        gameId: '3',
+        status: 'COMPLETED' as const,
+        outcome: 'DRAW' as const,
+        score: { player1: 2, player2: 2 },
+        provider: 'mock-provider'
+      },
+      {
+        gameId: '4',
+        status: 'PENDING' as const,
+        outcome: 'DRAW' as const,
+        provider: 'mock-provider'
+      }
+    ];
+
+    for (const game of mockGames) {
+      await prisma.gameResult.upsert({
+        where: { gameId: game.gameId },
+        update: game,
+        create: game
+      });
+    }
+
     console.log('Database seeded successfully!')
+    console.log('Mock providers registered:')
+    console.log('- mock-api (API provider)')
+    console.log('- mock-webhook (Webhook provider)')
+    console.log('Mock game results created for game IDs: 2, 3, 4')
   } catch (error) {
     console.error('Error seeding database:', error)
     throw error

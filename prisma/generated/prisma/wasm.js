@@ -303,6 +303,19 @@ exports.Prisma.ZKProofVerificationScalarFieldEnum = {
   verifiedAt: 'verifiedAt'
 };
 
+exports.Prisma.GameResultScalarFieldEnum = {
+  id: 'id',
+  gameId: 'gameId',
+  status: 'status',
+  outcome: 'outcome',
+  winner: 'winner',
+  loser: 'loser',
+  score: 'score',
+  provider: 'provider',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -502,6 +515,18 @@ exports.AccessType = exports.$Enums.AccessType = {
   SELECTED: 'SELECTED'
 };
 
+exports.GameStatus = exports.$Enums.GameStatus = {
+  COMPLETED: 'COMPLETED',
+  PENDING: 'PENDING',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.GameOutcome = exports.$Enums.GameOutcome = {
+  WIN: 'WIN',
+  LOSE: 'LOSE',
+  DRAW: 'DRAW'
+};
+
 exports.Prisma.ModelName = {
   Provider: 'Provider',
   Service: 'Service',
@@ -516,7 +541,8 @@ exports.Prisma.ModelName = {
   AccessLog: 'AccessLog',
   UsageQuota: 'UsageQuota',
   ComplianceAudit: 'ComplianceAudit',
-  ZKProofVerification: 'ZKProofVerification'
+  ZKProofVerification: 'ZKProofVerification',
+  GameResult: 'GameResult'
 };
 
 /**

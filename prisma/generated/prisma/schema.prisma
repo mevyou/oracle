@@ -193,6 +193,18 @@ enum AccessType {
   SELECTED
 }
 
+enum GameStatus {
+  COMPLETED
+  PENDING
+  CANCELLED
+}
+
+enum GameOutcome {
+  WIN
+  LOSE
+  DRAW
+}
+
 // Main Models
 model Provider {
   id                      Int                     @id @default(autoincrement())
@@ -483,4 +495,19 @@ model ZKProofVerification {
   service  Service  @relation(fields: [serviceId], references: [id])
 
   @@map("zk_proof_verifications")
+}
+
+model GameResult {
+  id        String      @id @default(cuid())
+  gameId    String      @unique
+  status    GameStatus
+  outcome   GameOutcome
+  winner    String?
+  loser     String?
+  score     Json? // { player1: number, player2: number }
+  provider  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("game_results")
 }

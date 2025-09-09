@@ -83,6 +83,11 @@ export type ComplianceAudit = $Result.DefaultSelection<Prisma.$ComplianceAuditPa
  * 
  */
 export type ZKProofVerification = $Result.DefaultSelection<Prisma.$ZKProofVerificationPayload>
+/**
+ * Model GameResult
+ * 
+ */
+export type GameResult = $Result.DefaultSelection<Prisma.$GameResultPayload>
 
 /**
  * Enums
@@ -318,6 +323,24 @@ export const AccessType: {
 
 export type AccessType = (typeof AccessType)[keyof typeof AccessType]
 
+
+export const GameStatus: {
+  COMPLETED: 'COMPLETED',
+  PENDING: 'PENDING',
+  CANCELLED: 'CANCELLED'
+};
+
+export type GameStatus = (typeof GameStatus)[keyof typeof GameStatus]
+
+
+export const GameOutcome: {
+  WIN: 'WIN',
+  LOSE: 'LOSE',
+  DRAW: 'DRAW'
+};
+
+export type GameOutcome = (typeof GameOutcome)[keyof typeof GameOutcome]
+
 }
 
 export type ServiceType = $Enums.ServiceType
@@ -391,6 +414,14 @@ export const ComplianceStatus: typeof $Enums.ComplianceStatus
 export type AccessType = $Enums.AccessType
 
 export const AccessType: typeof $Enums.AccessType
+
+export type GameStatus = $Enums.GameStatus
+
+export const GameStatus: typeof $Enums.GameStatus
+
+export type GameOutcome = $Enums.GameOutcome
+
+export const GameOutcome: typeof $Enums.GameOutcome
 
 /**
  * ##  Prisma Client ʲˢ
@@ -656,6 +687,16 @@ export class PrismaClient<
     * ```
     */
   get zKProofVerification(): Prisma.ZKProofVerificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gameResult`: Exposes CRUD operations for the **GameResult** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GameResults
+    * const gameResults = await prisma.gameResult.findMany()
+    * ```
+    */
+  get gameResult(): Prisma.GameResultDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1109,7 +1150,8 @@ export namespace Prisma {
     AccessLog: 'AccessLog',
     UsageQuota: 'UsageQuota',
     ComplianceAudit: 'ComplianceAudit',
-    ZKProofVerification: 'ZKProofVerification'
+    ZKProofVerification: 'ZKProofVerification',
+    GameResult: 'GameResult'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1128,7 +1170,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "provider" | "service" | "platform" | "contract" | "platformAccess" | "contractPermission" | "jWTToken" | "serviceSubscription" | "platformAccessToken" | "servicePermission" | "accessLog" | "usageQuota" | "complianceAudit" | "zKProofVerification"
+      modelProps: "provider" | "service" | "platform" | "contract" | "platformAccess" | "contractPermission" | "jWTToken" | "serviceSubscription" | "platformAccessToken" | "servicePermission" | "accessLog" | "usageQuota" | "complianceAudit" | "zKProofVerification" | "gameResult"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2168,6 +2210,80 @@ export namespace Prisma {
           }
         }
       }
+      GameResult: {
+        payload: Prisma.$GameResultPayload<ExtArgs>
+        fields: Prisma.GameResultFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GameResultFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GameResultFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>
+          }
+          findFirst: {
+            args: Prisma.GameResultFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GameResultFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>
+          }
+          findMany: {
+            args: Prisma.GameResultFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>[]
+          }
+          create: {
+            args: Prisma.GameResultCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>
+          }
+          createMany: {
+            args: Prisma.GameResultCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GameResultCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>[]
+          }
+          delete: {
+            args: Prisma.GameResultDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>
+          }
+          update: {
+            args: Prisma.GameResultUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>
+          }
+          deleteMany: {
+            args: Prisma.GameResultDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GameResultUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GameResultUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>[]
+          }
+          upsert: {
+            args: Prisma.GameResultUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameResultPayload>
+          }
+          aggregate: {
+            args: Prisma.GameResultAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGameResult>
+          }
+          groupBy: {
+            args: Prisma.GameResultGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GameResultGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GameResultCountArgs<ExtArgs>
+            result: $Utils.Optional<GameResultCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2266,6 +2382,7 @@ export namespace Prisma {
     usageQuota?: UsageQuotaOmit
     complianceAudit?: ComplianceAuditOmit
     zKProofVerification?: ZKProofVerificationOmit
+    gameResult?: GameResultOmit
   }
 
   /* Types for Logging */
@@ -19562,6 +19679,1062 @@ export namespace Prisma {
 
 
   /**
+   * Model GameResult
+   */
+
+  export type AggregateGameResult = {
+    _count: GameResultCountAggregateOutputType | null
+    _min: GameResultMinAggregateOutputType | null
+    _max: GameResultMaxAggregateOutputType | null
+  }
+
+  export type GameResultMinAggregateOutputType = {
+    id: string | null
+    gameId: string | null
+    status: $Enums.GameStatus | null
+    outcome: $Enums.GameOutcome | null
+    winner: string | null
+    loser: string | null
+    provider: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GameResultMaxAggregateOutputType = {
+    id: string | null
+    gameId: string | null
+    status: $Enums.GameStatus | null
+    outcome: $Enums.GameOutcome | null
+    winner: string | null
+    loser: string | null
+    provider: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GameResultCountAggregateOutputType = {
+    id: number
+    gameId: number
+    status: number
+    outcome: number
+    winner: number
+    loser: number
+    score: number
+    provider: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GameResultMinAggregateInputType = {
+    id?: true
+    gameId?: true
+    status?: true
+    outcome?: true
+    winner?: true
+    loser?: true
+    provider?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GameResultMaxAggregateInputType = {
+    id?: true
+    gameId?: true
+    status?: true
+    outcome?: true
+    winner?: true
+    loser?: true
+    provider?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GameResultCountAggregateInputType = {
+    id?: true
+    gameId?: true
+    status?: true
+    outcome?: true
+    winner?: true
+    loser?: true
+    score?: true
+    provider?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GameResultAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GameResult to aggregate.
+     */
+    where?: GameResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameResults to fetch.
+     */
+    orderBy?: GameResultOrderByWithRelationInput | GameResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GameResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GameResults
+    **/
+    _count?: true | GameResultCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GameResultMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GameResultMaxAggregateInputType
+  }
+
+  export type GetGameResultAggregateType<T extends GameResultAggregateArgs> = {
+        [P in keyof T & keyof AggregateGameResult]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGameResult[P]>
+      : GetScalarType<T[P], AggregateGameResult[P]>
+  }
+
+
+
+
+  export type GameResultGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameResultWhereInput
+    orderBy?: GameResultOrderByWithAggregationInput | GameResultOrderByWithAggregationInput[]
+    by: GameResultScalarFieldEnum[] | GameResultScalarFieldEnum
+    having?: GameResultScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GameResultCountAggregateInputType | true
+    _min?: GameResultMinAggregateInputType
+    _max?: GameResultMaxAggregateInputType
+  }
+
+  export type GameResultGroupByOutputType = {
+    id: string
+    gameId: string
+    status: $Enums.GameStatus
+    outcome: $Enums.GameOutcome
+    winner: string | null
+    loser: string | null
+    score: JsonValue | null
+    provider: string
+    createdAt: Date
+    updatedAt: Date
+    _count: GameResultCountAggregateOutputType | null
+    _min: GameResultMinAggregateOutputType | null
+    _max: GameResultMaxAggregateOutputType | null
+  }
+
+  type GetGameResultGroupByPayload<T extends GameResultGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GameResultGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GameResultGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GameResultGroupByOutputType[P]>
+            : GetScalarType<T[P], GameResultGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GameResultSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gameId?: boolean
+    status?: boolean
+    outcome?: boolean
+    winner?: boolean
+    loser?: boolean
+    score?: boolean
+    provider?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["gameResult"]>
+
+  export type GameResultSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gameId?: boolean
+    status?: boolean
+    outcome?: boolean
+    winner?: boolean
+    loser?: boolean
+    score?: boolean
+    provider?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["gameResult"]>
+
+  export type GameResultSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gameId?: boolean
+    status?: boolean
+    outcome?: boolean
+    winner?: boolean
+    loser?: boolean
+    score?: boolean
+    provider?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["gameResult"]>
+
+  export type GameResultSelectScalar = {
+    id?: boolean
+    gameId?: boolean
+    status?: boolean
+    outcome?: boolean
+    winner?: boolean
+    loser?: boolean
+    score?: boolean
+    provider?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GameResultOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "status" | "outcome" | "winner" | "loser" | "score" | "provider" | "createdAt" | "updatedAt", ExtArgs["result"]["gameResult"]>
+
+  export type $GameResultPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GameResult"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      gameId: string
+      status: $Enums.GameStatus
+      outcome: $Enums.GameOutcome
+      winner: string | null
+      loser: string | null
+      score: Prisma.JsonValue | null
+      provider: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["gameResult"]>
+    composites: {}
+  }
+
+  type GameResultGetPayload<S extends boolean | null | undefined | GameResultDefaultArgs> = $Result.GetResult<Prisma.$GameResultPayload, S>
+
+  type GameResultCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GameResultFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GameResultCountAggregateInputType | true
+    }
+
+  export interface GameResultDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GameResult'], meta: { name: 'GameResult' } }
+    /**
+     * Find zero or one GameResult that matches the filter.
+     * @param {GameResultFindUniqueArgs} args - Arguments to find a GameResult
+     * @example
+     * // Get one GameResult
+     * const gameResult = await prisma.gameResult.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GameResultFindUniqueArgs>(args: SelectSubset<T, GameResultFindUniqueArgs<ExtArgs>>): Prisma__GameResultClient<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GameResult that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GameResultFindUniqueOrThrowArgs} args - Arguments to find a GameResult
+     * @example
+     * // Get one GameResult
+     * const gameResult = await prisma.gameResult.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GameResultFindUniqueOrThrowArgs>(args: SelectSubset<T, GameResultFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameResultClient<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GameResult that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameResultFindFirstArgs} args - Arguments to find a GameResult
+     * @example
+     * // Get one GameResult
+     * const gameResult = await prisma.gameResult.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GameResultFindFirstArgs>(args?: SelectSubset<T, GameResultFindFirstArgs<ExtArgs>>): Prisma__GameResultClient<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GameResult that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameResultFindFirstOrThrowArgs} args - Arguments to find a GameResult
+     * @example
+     * // Get one GameResult
+     * const gameResult = await prisma.gameResult.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GameResultFindFirstOrThrowArgs>(args?: SelectSubset<T, GameResultFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameResultClient<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GameResults that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameResultFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GameResults
+     * const gameResults = await prisma.gameResult.findMany()
+     * 
+     * // Get first 10 GameResults
+     * const gameResults = await prisma.gameResult.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gameResultWithIdOnly = await prisma.gameResult.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GameResultFindManyArgs>(args?: SelectSubset<T, GameResultFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GameResult.
+     * @param {GameResultCreateArgs} args - Arguments to create a GameResult.
+     * @example
+     * // Create one GameResult
+     * const GameResult = await prisma.gameResult.create({
+     *   data: {
+     *     // ... data to create a GameResult
+     *   }
+     * })
+     * 
+     */
+    create<T extends GameResultCreateArgs>(args: SelectSubset<T, GameResultCreateArgs<ExtArgs>>): Prisma__GameResultClient<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GameResults.
+     * @param {GameResultCreateManyArgs} args - Arguments to create many GameResults.
+     * @example
+     * // Create many GameResults
+     * const gameResult = await prisma.gameResult.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GameResultCreateManyArgs>(args?: SelectSubset<T, GameResultCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GameResults and returns the data saved in the database.
+     * @param {GameResultCreateManyAndReturnArgs} args - Arguments to create many GameResults.
+     * @example
+     * // Create many GameResults
+     * const gameResult = await prisma.gameResult.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GameResults and only return the `id`
+     * const gameResultWithIdOnly = await prisma.gameResult.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GameResultCreateManyAndReturnArgs>(args?: SelectSubset<T, GameResultCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GameResult.
+     * @param {GameResultDeleteArgs} args - Arguments to delete one GameResult.
+     * @example
+     * // Delete one GameResult
+     * const GameResult = await prisma.gameResult.delete({
+     *   where: {
+     *     // ... filter to delete one GameResult
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GameResultDeleteArgs>(args: SelectSubset<T, GameResultDeleteArgs<ExtArgs>>): Prisma__GameResultClient<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GameResult.
+     * @param {GameResultUpdateArgs} args - Arguments to update one GameResult.
+     * @example
+     * // Update one GameResult
+     * const gameResult = await prisma.gameResult.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GameResultUpdateArgs>(args: SelectSubset<T, GameResultUpdateArgs<ExtArgs>>): Prisma__GameResultClient<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GameResults.
+     * @param {GameResultDeleteManyArgs} args - Arguments to filter GameResults to delete.
+     * @example
+     * // Delete a few GameResults
+     * const { count } = await prisma.gameResult.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GameResultDeleteManyArgs>(args?: SelectSubset<T, GameResultDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GameResults.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameResultUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GameResults
+     * const gameResult = await prisma.gameResult.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GameResultUpdateManyArgs>(args: SelectSubset<T, GameResultUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GameResults and returns the data updated in the database.
+     * @param {GameResultUpdateManyAndReturnArgs} args - Arguments to update many GameResults.
+     * @example
+     * // Update many GameResults
+     * const gameResult = await prisma.gameResult.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GameResults and only return the `id`
+     * const gameResultWithIdOnly = await prisma.gameResult.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GameResultUpdateManyAndReturnArgs>(args: SelectSubset<T, GameResultUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GameResult.
+     * @param {GameResultUpsertArgs} args - Arguments to update or create a GameResult.
+     * @example
+     * // Update or create a GameResult
+     * const gameResult = await prisma.gameResult.upsert({
+     *   create: {
+     *     // ... data to create a GameResult
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GameResult we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GameResultUpsertArgs>(args: SelectSubset<T, GameResultUpsertArgs<ExtArgs>>): Prisma__GameResultClient<$Result.GetResult<Prisma.$GameResultPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GameResults.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameResultCountArgs} args - Arguments to filter GameResults to count.
+     * @example
+     * // Count the number of GameResults
+     * const count = await prisma.gameResult.count({
+     *   where: {
+     *     // ... the filter for the GameResults we want to count
+     *   }
+     * })
+    **/
+    count<T extends GameResultCountArgs>(
+      args?: Subset<T, GameResultCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GameResultCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GameResult.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameResultAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GameResultAggregateArgs>(args: Subset<T, GameResultAggregateArgs>): Prisma.PrismaPromise<GetGameResultAggregateType<T>>
+
+    /**
+     * Group by GameResult.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameResultGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GameResultGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GameResultGroupByArgs['orderBy'] }
+        : { orderBy?: GameResultGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GameResultGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameResultGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GameResult model
+   */
+  readonly fields: GameResultFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GameResult.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GameResultClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GameResult model
+   */
+  interface GameResultFieldRefs {
+    readonly id: FieldRef<"GameResult", 'String'>
+    readonly gameId: FieldRef<"GameResult", 'String'>
+    readonly status: FieldRef<"GameResult", 'GameStatus'>
+    readonly outcome: FieldRef<"GameResult", 'GameOutcome'>
+    readonly winner: FieldRef<"GameResult", 'String'>
+    readonly loser: FieldRef<"GameResult", 'String'>
+    readonly score: FieldRef<"GameResult", 'Json'>
+    readonly provider: FieldRef<"GameResult", 'String'>
+    readonly createdAt: FieldRef<"GameResult", 'DateTime'>
+    readonly updatedAt: FieldRef<"GameResult", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GameResult findUnique
+   */
+  export type GameResultFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * Filter, which GameResult to fetch.
+     */
+    where: GameResultWhereUniqueInput
+  }
+
+  /**
+   * GameResult findUniqueOrThrow
+   */
+  export type GameResultFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * Filter, which GameResult to fetch.
+     */
+    where: GameResultWhereUniqueInput
+  }
+
+  /**
+   * GameResult findFirst
+   */
+  export type GameResultFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * Filter, which GameResult to fetch.
+     */
+    where?: GameResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameResults to fetch.
+     */
+    orderBy?: GameResultOrderByWithRelationInput | GameResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GameResults.
+     */
+    cursor?: GameResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GameResults.
+     */
+    distinct?: GameResultScalarFieldEnum | GameResultScalarFieldEnum[]
+  }
+
+  /**
+   * GameResult findFirstOrThrow
+   */
+  export type GameResultFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * Filter, which GameResult to fetch.
+     */
+    where?: GameResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameResults to fetch.
+     */
+    orderBy?: GameResultOrderByWithRelationInput | GameResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GameResults.
+     */
+    cursor?: GameResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GameResults.
+     */
+    distinct?: GameResultScalarFieldEnum | GameResultScalarFieldEnum[]
+  }
+
+  /**
+   * GameResult findMany
+   */
+  export type GameResultFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * Filter, which GameResults to fetch.
+     */
+    where?: GameResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameResults to fetch.
+     */
+    orderBy?: GameResultOrderByWithRelationInput | GameResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GameResults.
+     */
+    cursor?: GameResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameResults.
+     */
+    skip?: number
+    distinct?: GameResultScalarFieldEnum | GameResultScalarFieldEnum[]
+  }
+
+  /**
+   * GameResult create
+   */
+  export type GameResultCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * The data needed to create a GameResult.
+     */
+    data: XOR<GameResultCreateInput, GameResultUncheckedCreateInput>
+  }
+
+  /**
+   * GameResult createMany
+   */
+  export type GameResultCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GameResults.
+     */
+    data: GameResultCreateManyInput | GameResultCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GameResult createManyAndReturn
+   */
+  export type GameResultCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * The data used to create many GameResults.
+     */
+    data: GameResultCreateManyInput | GameResultCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GameResult update
+   */
+  export type GameResultUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * The data needed to update a GameResult.
+     */
+    data: XOR<GameResultUpdateInput, GameResultUncheckedUpdateInput>
+    /**
+     * Choose, which GameResult to update.
+     */
+    where: GameResultWhereUniqueInput
+  }
+
+  /**
+   * GameResult updateMany
+   */
+  export type GameResultUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GameResults.
+     */
+    data: XOR<GameResultUpdateManyMutationInput, GameResultUncheckedUpdateManyInput>
+    /**
+     * Filter which GameResults to update
+     */
+    where?: GameResultWhereInput
+    /**
+     * Limit how many GameResults to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GameResult updateManyAndReturn
+   */
+  export type GameResultUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * The data used to update GameResults.
+     */
+    data: XOR<GameResultUpdateManyMutationInput, GameResultUncheckedUpdateManyInput>
+    /**
+     * Filter which GameResults to update
+     */
+    where?: GameResultWhereInput
+    /**
+     * Limit how many GameResults to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GameResult upsert
+   */
+  export type GameResultUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * The filter to search for the GameResult to update in case it exists.
+     */
+    where: GameResultWhereUniqueInput
+    /**
+     * In case the GameResult found by the `where` argument doesn't exist, create a new GameResult with this data.
+     */
+    create: XOR<GameResultCreateInput, GameResultUncheckedCreateInput>
+    /**
+     * In case the GameResult was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GameResultUpdateInput, GameResultUncheckedUpdateInput>
+  }
+
+  /**
+   * GameResult delete
+   */
+  export type GameResultDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+    /**
+     * Filter which GameResult to delete.
+     */
+    where: GameResultWhereUniqueInput
+  }
+
+  /**
+   * GameResult deleteMany
+   */
+  export type GameResultDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GameResults to delete
+     */
+    where?: GameResultWhereInput
+    /**
+     * Limit how many GameResults to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GameResult without action
+   */
+  export type GameResultDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameResult
+     */
+    select?: GameResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameResult
+     */
+    omit?: GameResultOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -19798,6 +20971,22 @@ export namespace Prisma {
   };
 
   export type ZKProofVerificationScalarFieldEnum = (typeof ZKProofVerificationScalarFieldEnum)[keyof typeof ZKProofVerificationScalarFieldEnum]
+
+
+  export const GameResultScalarFieldEnum: {
+    id: 'id',
+    gameId: 'gameId',
+    status: 'status',
+    outcome: 'outcome',
+    winner: 'winner',
+    loser: 'loser',
+    score: 'score',
+    provider: 'provider',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GameResultScalarFieldEnum = (typeof GameResultScalarFieldEnum)[keyof typeof GameResultScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -20151,6 +21340,34 @@ export namespace Prisma {
    * Reference to a field of type 'AccessType[]'
    */
   export type ListEnumAccessTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccessType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameStatus'
+   */
+  export type EnumGameStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameStatus[]'
+   */
+  export type ListEnumGameStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameOutcome'
+   */
+  export type EnumGameOutcomeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameOutcome'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameOutcome[]'
+   */
+  export type ListEnumGameOutcomeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameOutcome[]'>
     
 
 
@@ -21430,6 +22647,83 @@ export namespace Prisma {
     publicInputs?: JsonWithAggregatesFilter<"ZKProofVerification">
     isValid?: BoolWithAggregatesFilter<"ZKProofVerification"> | boolean
     verifiedAt?: DateTimeWithAggregatesFilter<"ZKProofVerification"> | Date | string
+  }
+
+  export type GameResultWhereInput = {
+    AND?: GameResultWhereInput | GameResultWhereInput[]
+    OR?: GameResultWhereInput[]
+    NOT?: GameResultWhereInput | GameResultWhereInput[]
+    id?: StringFilter<"GameResult"> | string
+    gameId?: StringFilter<"GameResult"> | string
+    status?: EnumGameStatusFilter<"GameResult"> | $Enums.GameStatus
+    outcome?: EnumGameOutcomeFilter<"GameResult"> | $Enums.GameOutcome
+    winner?: StringNullableFilter<"GameResult"> | string | null
+    loser?: StringNullableFilter<"GameResult"> | string | null
+    score?: JsonNullableFilter<"GameResult">
+    provider?: StringFilter<"GameResult"> | string
+    createdAt?: DateTimeFilter<"GameResult"> | Date | string
+    updatedAt?: DateTimeFilter<"GameResult"> | Date | string
+  }
+
+  export type GameResultOrderByWithRelationInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    status?: SortOrder
+    outcome?: SortOrder
+    winner?: SortOrderInput | SortOrder
+    loser?: SortOrderInput | SortOrder
+    score?: SortOrderInput | SortOrder
+    provider?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GameResultWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    gameId?: string
+    AND?: GameResultWhereInput | GameResultWhereInput[]
+    OR?: GameResultWhereInput[]
+    NOT?: GameResultWhereInput | GameResultWhereInput[]
+    status?: EnumGameStatusFilter<"GameResult"> | $Enums.GameStatus
+    outcome?: EnumGameOutcomeFilter<"GameResult"> | $Enums.GameOutcome
+    winner?: StringNullableFilter<"GameResult"> | string | null
+    loser?: StringNullableFilter<"GameResult"> | string | null
+    score?: JsonNullableFilter<"GameResult">
+    provider?: StringFilter<"GameResult"> | string
+    createdAt?: DateTimeFilter<"GameResult"> | Date | string
+    updatedAt?: DateTimeFilter<"GameResult"> | Date | string
+  }, "id" | "gameId">
+
+  export type GameResultOrderByWithAggregationInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    status?: SortOrder
+    outcome?: SortOrder
+    winner?: SortOrderInput | SortOrder
+    loser?: SortOrderInput | SortOrder
+    score?: SortOrderInput | SortOrder
+    provider?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GameResultCountOrderByAggregateInput
+    _max?: GameResultMaxOrderByAggregateInput
+    _min?: GameResultMinOrderByAggregateInput
+  }
+
+  export type GameResultScalarWhereWithAggregatesInput = {
+    AND?: GameResultScalarWhereWithAggregatesInput | GameResultScalarWhereWithAggregatesInput[]
+    OR?: GameResultScalarWhereWithAggregatesInput[]
+    NOT?: GameResultScalarWhereWithAggregatesInput | GameResultScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GameResult"> | string
+    gameId?: StringWithAggregatesFilter<"GameResult"> | string
+    status?: EnumGameStatusWithAggregatesFilter<"GameResult"> | $Enums.GameStatus
+    outcome?: EnumGameOutcomeWithAggregatesFilter<"GameResult"> | $Enums.GameOutcome
+    winner?: StringNullableWithAggregatesFilter<"GameResult"> | string | null
+    loser?: StringNullableWithAggregatesFilter<"GameResult"> | string | null
+    score?: JsonNullableWithAggregatesFilter<"GameResult">
+    provider?: StringWithAggregatesFilter<"GameResult"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GameResult"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GameResult"> | Date | string
   }
 
   export type ProviderCreateInput = {
@@ -22788,6 +24082,97 @@ export namespace Prisma {
     verifiedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type GameResultCreateInput = {
+    id?: string
+    gameId: string
+    status: $Enums.GameStatus
+    outcome: $Enums.GameOutcome
+    winner?: string | null
+    loser?: string | null
+    score?: NullableJsonNullValueInput | InputJsonValue
+    provider: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GameResultUncheckedCreateInput = {
+    id?: string
+    gameId: string
+    status: $Enums.GameStatus
+    outcome: $Enums.GameOutcome
+    winner?: string | null
+    loser?: string | null
+    score?: NullableJsonNullValueInput | InputJsonValue
+    provider: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GameResultUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+    outcome?: EnumGameOutcomeFieldUpdateOperationsInput | $Enums.GameOutcome
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
+    loser?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableJsonNullValueInput | InputJsonValue
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameResultUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+    outcome?: EnumGameOutcomeFieldUpdateOperationsInput | $Enums.GameOutcome
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
+    loser?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableJsonNullValueInput | InputJsonValue
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameResultCreateManyInput = {
+    id?: string
+    gameId: string
+    status: $Enums.GameStatus
+    outcome: $Enums.GameOutcome
+    winner?: string | null
+    loser?: string | null
+    score?: NullableJsonNullValueInput | InputJsonValue
+    provider: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GameResultUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+    outcome?: EnumGameOutcomeFieldUpdateOperationsInput | $Enums.GameOutcome
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
+    loser?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableJsonNullValueInput | InputJsonValue
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameResultUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    status?: EnumGameStatusFieldUpdateOperationsInput | $Enums.GameStatus
+    outcome?: EnumGameOutcomeFieldUpdateOperationsInput | $Enums.GameOutcome
+    winner?: NullableStringFieldUpdateOperationsInput | string | null
+    loser?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableJsonNullValueInput | InputJsonValue
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -24094,6 +25479,77 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumZKProofTypeFilter<$PrismaModel>
     _max?: NestedEnumZKProofTypeFilter<$PrismaModel>
+  }
+
+  export type EnumGameStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameStatus | EnumGameStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GameStatus[] | ListEnumGameStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameStatus[] | ListEnumGameStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameStatusFilter<$PrismaModel> | $Enums.GameStatus
+  }
+
+  export type EnumGameOutcomeFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameOutcome | EnumGameOutcomeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameOutcome[] | ListEnumGameOutcomeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameOutcome[] | ListEnumGameOutcomeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameOutcomeFilter<$PrismaModel> | $Enums.GameOutcome
+  }
+
+  export type GameResultCountOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    status?: SortOrder
+    outcome?: SortOrder
+    winner?: SortOrder
+    loser?: SortOrder
+    score?: SortOrder
+    provider?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GameResultMaxOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    status?: SortOrder
+    outcome?: SortOrder
+    winner?: SortOrder
+    loser?: SortOrder
+    provider?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GameResultMinOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    status?: SortOrder
+    outcome?: SortOrder
+    winner?: SortOrder
+    loser?: SortOrder
+    provider?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumGameStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameStatus | EnumGameStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GameStatus[] | ListEnumGameStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameStatus[] | ListEnumGameStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameStatusWithAggregatesFilter<$PrismaModel> | $Enums.GameStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameStatusFilter<$PrismaModel>
+    _max?: NestedEnumGameStatusFilter<$PrismaModel>
+  }
+
+  export type EnumGameOutcomeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameOutcome | EnumGameOutcomeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameOutcome[] | ListEnumGameOutcomeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameOutcome[] | ListEnumGameOutcomeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameOutcomeWithAggregatesFilter<$PrismaModel> | $Enums.GameOutcome
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameOutcomeFilter<$PrismaModel>
+    _max?: NestedEnumGameOutcomeFilter<$PrismaModel>
   }
 
   export type ProviderCreatechainsInput = {
@@ -25694,6 +27150,14 @@ export namespace Prisma {
     update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutZkProofVerificationsInput, ServiceUpdateWithoutZkProofVerificationsInput>, ServiceUncheckedUpdateWithoutZkProofVerificationsInput>
   }
 
+  export type EnumGameStatusFieldUpdateOperationsInput = {
+    set?: $Enums.GameStatus
+  }
+
+  export type EnumGameOutcomeFieldUpdateOperationsInput = {
+    set?: $Enums.GameOutcome
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -26184,6 +27648,40 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumZKProofTypeFilter<$PrismaModel>
     _max?: NestedEnumZKProofTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGameStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameStatus | EnumGameStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GameStatus[] | ListEnumGameStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameStatus[] | ListEnumGameStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameStatusFilter<$PrismaModel> | $Enums.GameStatus
+  }
+
+  export type NestedEnumGameOutcomeFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameOutcome | EnumGameOutcomeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameOutcome[] | ListEnumGameOutcomeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameOutcome[] | ListEnumGameOutcomeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameOutcomeFilter<$PrismaModel> | $Enums.GameOutcome
+  }
+
+  export type NestedEnumGameStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameStatus | EnumGameStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GameStatus[] | ListEnumGameStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameStatus[] | ListEnumGameStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameStatusWithAggregatesFilter<$PrismaModel> | $Enums.GameStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameStatusFilter<$PrismaModel>
+    _max?: NestedEnumGameStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGameOutcomeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameOutcome | EnumGameOutcomeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameOutcome[] | ListEnumGameOutcomeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameOutcome[] | ListEnumGameOutcomeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameOutcomeWithAggregatesFilter<$PrismaModel> | $Enums.GameOutcome
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameOutcomeFilter<$PrismaModel>
+    _max?: NestedEnumGameOutcomeFilter<$PrismaModel>
   }
 
   export type ServiceCreateWithoutProviderInput = {
