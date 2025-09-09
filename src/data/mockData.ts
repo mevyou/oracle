@@ -9,7 +9,7 @@ export const mockGameResults: GameResult[] = [
     loser: 'Player2',
     score: { player1: 3, player2: 1 },
     timestamp: new Date('2024-01-15T10:30:00Z'),
-    provider: 'mock-provider'
+    provider: 'football_bet_provider'
   },
   {
     gameId: '3',
@@ -17,14 +17,14 @@ export const mockGameResults: GameResult[] = [
     outcome: 'draw',
     score: { player1: 2, player2: 2 },
     timestamp: new Date('2024-01-15T11:00:00Z'),
-    provider: 'mock-provider'
+    provider: 'prediction_market_provider'
   },
   {
     gameId: '4',
     status: 'pending',
     outcome: 'draw',
     timestamp: new Date('2024-01-15T11:30:00Z'),
-    provider: 'mock-provider'
+    provider: 'ludo_provider'
   },
   {
     gameId: '5',
@@ -34,14 +34,14 @@ export const mockGameResults: GameResult[] = [
     loser: 'Player4',
     score: { player1: 4, player2: 2 },
     timestamp: new Date('2024-01-15T12:00:00Z'),
-    provider: 'mock-provider'
+    provider: 'basketball_provider'
   },
   {
     gameId: '6',
     status: 'cancelled',
     outcome: 'draw',
     timestamp: new Date('2024-01-15T12:30:00Z'),
-    provider: 'mock-provider'
+    provider: 'cricket_provider'
   }
 ];
 
