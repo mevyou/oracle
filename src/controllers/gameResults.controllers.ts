@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { prisma } from '../config/db';
 import { providerManager, GameResult } from '../utils/providerHooks';
+import { getMockGameResult, getAllMockGameResults } from '../data/mockData';
 import { z } from 'zod';
 
 const gameResultSchema = z.object({
@@ -20,50 +21,69 @@ const getGameResult = async (req: Request, res: Response, next: NextFunction): P
   try {
     const { id } = req.params;
     
-    let gameResult = await prisma.gameResult.findUnique({
-      where: { gameId: id }
-    });
+    let gameResult = null;
+    let usingMockData = false;
 
-    if (!gameResult) {
+    // Try database first
+    try {
+      gameResult = await prisma.gameResult.findUnique({
+        where: { gameId: id }
+      });
+    } catch (dbError) {
+      console.log('📦 Database unavailable, falling back to mock data');
+      usingMockData = true;
+    }
+
+    // If not found in DB, try providers
+    if (!gameResult && !usingMockData) {
       const availableProviders = providerManager.getAvailableProviders();
       
       if (availableProviders.length === 0) {
-        res.status(404).json({ 
-          message: 'Game result not found and no providers available' 
-        });
-        return;
-      }
-
-      for (const providerName of availableProviders) {
-        try {
-          const fetchedResult = await providerManager.fetchFromProvider(providerName, id);
-          
-          gameResult = await prisma.gameResult.create({
-            data: {
-              gameId: fetchedResult.gameId,
-              status: fetchedResult.status.toUpperCase() as any,
-              outcome: fetchedResult.outcome.toUpperCase() as any,
-              winner: fetchedResult.winner,
-              loser: fetchedResult.loser,
-              score: fetchedResult.score,
-              provider: fetchedResult.provider
-            }
-          });
-          break;
-        } catch (error) {
-          continue;
+        console.log('📦 No providers available, falling back to mock data');
+        usingMockData = true;
+      } else {
+        for (const providerName of availableProviders) {
+          try {
+            const fetchedResult = await providerManager.fetchFromProvider(providerName, id);
+            
+            gameResult = await prisma.gameResult.create({
+              data: {
+                gameId: fetchedResult.gameId,
+                status: fetchedResult.status.toUpperCase() as any,
+                outcome: fetchedResult.outcome.toUpperCase() as any,
+                winner: fetchedResult.winner,
+                loser: fetchedResult.loser,
+                score: fetchedResult.score,
+                provider: fetchedResult.provider
+              }
+            });
+            break;
+          } catch (error) {
+            continue;
+          }
         }
-      }
-
-      if (!gameResult) {
-        res.status(404).json({ 
-          message: 'Game result not found and could not be fetched from any provider' 
-        });
-        return;
       }
     }
 
-    res.status(200).json({ gameResult });
+    // Fallback to mock data
+    if (!gameResult) {
+      gameResult = getMockGameResult(id);
+      usingMockData = true;
+    }
+
+    if (!gameResult) {
+      res.status(404).json({ 
+        message: 'Game result not found',
+        usingMockData: false
+      });
+      return;
+    }
+
+    res.status(200).json({ 
+      gameResult,
+      usingMockData,
+      source: usingMockData ? 'mock-data' : 'database'
+    });
   } catch (error) {
     next(error);
   }
@@ -108,11 +128,25 @@ const createGameResult = async (req: Request, res: Response, next: NextFunction)
 
 const getAllGameResults = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const gameResults = await prisma.gameResult.findMany({
-      orderBy: { createdAt: 'desc' }
-    });
+    let gameResults = [];
+    let usingMockData = false;
 
-    res.status(200).json({ gameResults });
+    // Try database first
+    try {
+      gameResults = await prisma.gameResult.findMany({
+        orderBy: { createdAt: 'desc' }
+      });
+    } catch (dbError) {
+      console.log('📦 Database unavailable, falling back to mock data');
+      gameResults = getAllMockGameResults();
+      usingMockData = true;
+    }
+
+    res.status(200).json({ 
+      gameResults,
+      usingMockData,
+      source: usingMockData ? 'mock-data' : 'database'
+    });
   } catch (error) {
     next(error);
   }

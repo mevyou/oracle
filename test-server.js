@@ -53,12 +53,14 @@ async function testGameResults() {
     console.log('1. Getting all game results...');
     const allResults = await axios.get(`${BASE_URL}/api/results`);
     console.log('✅ All results:', allResults.data);
+    console.log(`   📊 Source: ${allResults.data.source} (${allResults.data.usingMockData ? 'Mock Data' : 'Database'})`);
     console.log('');
 
     // Test 2: Get specific game result (should exist from seed)
     console.log('2. Getting game result for ID "2"...');
     const game2 = await axios.get(`${BASE_URL}/api/results/2`);
     console.log('✅ Game 2 result:', game2.data);
+    console.log(`   📊 Source: ${game2.data.source} (${game2.data.usingMockData ? 'Mock Data' : 'Database'})`);
     console.log('');
 
     // Test 3: Get non-existent game result
