@@ -12,9 +12,12 @@ const startServer = async () => {
     app.listen(port, () => {
       console.log(`🚀 Server running on port ${port}`);
       console.log(`📡 API endpoints available at:`);
-      console.log(`   - http://localhost:${port}/api/results`);
+      console.log(`   - http://localhost:${port}/ (API info & available endpoints)`);
+      console.log(`   - http://localhost:${port}/health (Health check)`);
+      console.log(`   - http://localhost:${port}/api/results (Game results)`);
       console.log(`\n💡 Note: Server runs with mock data - no database required!`);
       console.log(`🎮 Game Results API ready for testing`);
+      console.log(`\n📚 Visit http://localhost:${port}/ to see all available endpoints`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { prisma } from '../config/db';
 import { providerManager, GameResult } from '../utils/providerHooks';
-import { getMockGameResult, getAllMockGameResults } from '../data/mockData';
+import { getMockGameResult, getAllMockGameResults, generateRequestId, ThreePartyGameResult } from '../data/mockData';
 import { z } from 'zod';
 
 const gameResultSchema = z.object({
@@ -10,11 +10,27 @@ const gameResultSchema = z.object({
   outcome: z.enum(['win', 'lose', 'draw']),
   winner: z.string().optional(),
   loser: z.string().optional(),
+  player1: z.string().min(1),
+  player2: z.string().min(1),
+  arbitrator: z.string().min(1),
+  arbitratorVerdict: z.object({
+    decision: z.enum(['player1_wins', 'player2_wins', 'draw', 'dispute']),
+    reasoning: z.string().min(1),
+    confidence: z.number().min(0).max(100),
+    evidence: z.array(z.any()).optional(), // Dynamic evidence - accepts any type
+    timestamp: z.date()
+  }),
   score: z.object({
     player1: z.number(),
     player2: z.number()
   }).optional(),
-  provider: z.string()
+  provider: z.string(),
+  gameDetails: z.object({
+    gameType: z.string(),
+    rules: z.array(z.string()),
+    duration: z.number(),
+    stakes: z.number()
+  })
 });
 
 const getGameResult = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -79,11 +95,16 @@ const getGameResult = async (req: Request, res: Response, next: NextFunction): P
       return;
     }
 
-    res.status(200).json({ 
+    // Add request ID to response
+    const responseData = {
+      requestId: generateRequestId(),
       gameResult,
       usingMockData,
-      source: usingMockData ? 'mock-data' : 'database'
-    });
+      source: usingMockData ? 'mock-data' : 'database',
+      timestamp: new Date().toISOString()
+    };
+
+    res.status(200).json(responseData);
   } catch (error) {
     next(error);
   }
@@ -142,11 +163,17 @@ const getAllGameResults = async (req: Request, res: Response, next: NextFunction
       usingMockData = true;
     }
 
-    res.status(200).json({ 
+    // Add request ID to response
+    const responseData = {
+      requestId: generateRequestId(),
       gameResults,
       usingMockData,
-      source: usingMockData ? 'mock-data' : 'database'
-    });
+      source: usingMockData ? 'mock-data' : 'database',
+      timestamp: new Date().toISOString(),
+      totalResults: gameResults.length
+    };
+
+    res.status(200).json(responseData);
   } catch (error) {
     next(error);
   }

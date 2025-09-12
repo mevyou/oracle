@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-// import { getFacility, getFacilityById, registerFacility, updateFacility, deleteFacility, revokeFacility } from "../controllers/platform.controllers";
+const platform_controllers_1 = require("../controllers/platform.controllers");
 const router = (0, express_1.Router)();
-// router.get('/', getPlatform)
-// router.get('/:id', getPlatformById)
-// router.post('/', registerPlatform)
-// router.put('/:id', updatePlatform)
-// router.delete('/:id', deletePlatform)
-// router.delete('/:id/revoke', revokePlatform)
+router.get('/', platform_controllers_1.getPlatforms);
+router.post('/', platform_controllers_1.registerPlatform);
+router.put('/:id', platform_controllers_1.updatePlatform);
+router.get('/:id', platform_controllers_1.getPlatformById);
+router.delete('/:id', platform_controllers_1.deletePlatform);
+router.delete('/:id/revoke', platform_controllers_1.revokePlatform);
 exports.default = router;

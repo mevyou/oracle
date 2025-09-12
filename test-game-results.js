@@ -2,7 +2,7 @@
 const axios = require('axios');
 const { createServer } = require('net');
 
-const findAvailablePort = async (startPort = 3002, maxAttempts = 10) => {
+const findAvailablePort = async (startPort = 3001, maxAttempts = 10) => {
   for (let i = 0; i < maxAttempts; i++) {
     const port = startPort + i;
     const available = await new Promise((resolve) => {

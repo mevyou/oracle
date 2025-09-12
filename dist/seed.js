@@ -1,57 +1,71 @@
 "use strict";
-// // scripts/importHospitalInfo.ts
-// import fs from 'fs';
-// import csvParser from 'csv-parser';
-// import { PrismaClient } from '../prisma/generated/prisma';
-// const prisma = new PrismaClient();
-// async function importHospitalInformationFromCSV(filePath: string) {
-//    const hospitals: any[] = [];
-//    return new Promise<void>((resolve, reject) => {
-//       fs.createReadStream(filePath)
-//          .pipe(csvParser())
-//          .on('data', (row) => {
-//             hospitals.push({
-//                id: row.id,
-//                facilityId: row.facilityId,
-//                facilityName: row.facilityName,
-//                address: row.address,
-//                city: row.city,
-//                state: row.state,
-//                zip: row.zip,
-//                telephone: row.telephone,
-//                country: row.country,
-//                hospitalType: row.hospitalType,
-//                hospitalOwnership: row.hospitalOwnership,
-//                hospitalOverallRating: row.hospitalOverallRating,
-//                hospitalOverallRatingFootnote: row.hospitalOverallRatingFootnote,
-//                emergencyServices: row.emergencyServices,
-//             });
-//          })
-//          .on('end', async () => {
-//             try {
-//                for (const hospital of hospitals) {
-//                   await prisma.hospitalInformation.create({
-//                      data: hospital,
-//                   });
-//                }
-//                console.log(`Imported ${hospitals.length} hospital records.`);
-//                resolve();
-//             } catch (err) {
-//                console.error('Error importing data:', err);
-//                reject(err);
-//             } finally {
-//                await prisma.$disconnect();
-//             }
-//          });
-//    });
-// }
-// // Call the function if run directly
-// if (require.main === module) {
-//    const filePath = process.argv[2];
-//    if (!filePath) {
-//       console.error('Please provide a CSV file path.');
-//       process.exit(1);
-//    }
-//    importHospitalInformationFromCSV(filePath);
-// }
-// // importHospitalInformationFromCSV('../src/data/Hospital_General_Information.csv')
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.seed = seed;
+const fs_1 = __importDefault(require("fs"));
+const csv_parser_1 = __importDefault(require("csv-parser"));
+const providerHooks_1 = require("./utils/providerHooks");
+const mockData_1 = require("./data/mockData");
+function parseDate(dateStr) {
+    try {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) {
+            return new Date(); // Return current date if invalid
+        }
+        return date;
+    }
+    catch {
+        return new Date(); // Return current date if parsing fails
+    }
+}
+async function parseCSV(filePath) {
+    const results = [];
+    return new Promise((resolve, reject) => {
+        fs_1.default.createReadStream(filePath)
+            .pipe((0, csv_parser_1.default)())
+            .on('data', (data) => {
+            // Parse JSON strings in the data
+            Object.keys(data).forEach(key => {
+                try {
+                    if (data[key].startsWith('[') || data[key].startsWith('{')) {
+                        data[key] = JSON.parse(data[key]);
+                    }
+                }
+                catch (e) {
+                    // If parsing fails, keep the original string
+                }
+            });
+            results.push(data);
+        })
+            .on('end', () => resolve(results))
+            .on('error', reject);
+    });
+}
+async function seed() {
+    try {
+        console.log('🎮 Initializing mock data (no database required)...');
+        // Register mock providers for game results
+        mockData_1.mockProviders.forEach(provider => {
+            providerHooks_1.providerManager.registerProvider(provider.name, provider);
+        });
+        console.log('✅ Mock providers registered:');
+        mockData_1.mockProviders.forEach(provider => {
+            console.log(`   - ${provider.name} (${provider.type})`);
+        });
+        console.log('📦 Mock data ready - server can run without database');
+    }
+    catch (error) {
+        console.error('Error initializing mock data:', error);
+        throw error;
+    }
+}
+// Run the seed function if this file is executed directly
+if (require.main === module) {
+    seed()
+        .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });
+}
