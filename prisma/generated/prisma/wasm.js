@@ -5,13 +5,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+  PrismaClientRustPanicError,
+  PrismaClientInitializationError,
+  PrismaClientValidationError,
+  getPrismaClient,
+  sqltag,
+  empty,
+  join,
+  raw,
+  skip,
   Decimal,
+  Debug,
   objectEnumValues,
   makeStrictEnum,
+  Extensions,
+  warnOnce,
+  defineDmmfProperty,
   Public,
   getRuntime,
-  skip
-} = require('./runtime/index-browser.js')
+  createParam,
+} = require('./runtime/wasm-engine-edge.js')
 
 
 const Prisma = {}
@@ -20,79 +35,35 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.8.2
- * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+ * Prisma Client JS version: 6.16.1
+ * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
  */
 Prisma.prismaVersion = {
-  client: "6.8.2",
-  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
+  client: "6.16.1",
+  engine: "1c57fdcd7e44b29b9313256c76699e91c3ac3c43"
 }
 
-Prisma.PrismaClientKnownRequestError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientKnownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)};
-Prisma.PrismaClientUnknownRequestError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientUnknownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientRustPanicError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientRustPanicError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientInitializationError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientInitializationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientValidationError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientValidationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
+Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
+Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
+Prisma.PrismaClientInitializationError = PrismaClientInitializationError
+Prisma.PrismaClientValidationError = PrismaClientValidationError
 Prisma.Decimal = Decimal
 
 /**
  * Re-export of sql-template-tag
  */
-Prisma.sql = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`sqltag is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.empty = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`empty is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.join = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`join is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.raw = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`raw is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.sql = sqltag
+Prisma.empty = empty
+Prisma.join = join
+Prisma.raw = raw
 Prisma.validator = Public.validator
 
 /**
 * Extensions
 */
-Prisma.getExtensionContext = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`Extensions.getExtensionContext is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.defineExtension = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`Extensions.defineExtension is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.getExtensionContext = Extensions.getExtensionContext
+Prisma.defineExtension = Extensions.defineExtension
 
 /**
  * Shorthand utilities for JSON filtering
@@ -109,198 +80,35 @@ Prisma.NullTypes = {
 
 
 
+
+
 /**
  * Enums
  */
-
-exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
-  Serializable: 'Serializable'
-});
-
-exports.Prisma.ProviderScalarFieldEnum = {
+exports.Prisma.UserProfileScalarFieldEnum = {
   id: 'id',
+  user: 'user',
   name: 'name',
-  serviceType: 'serviceType',
-  email: 'email',
-  rwaType: 'rwaType',
-  verificationLayer: 'verificationLayer',
-  interactionLayer: 'interactionLayer',
-  logo: 'logo',
-  coverImage: 'coverImage',
-  serviceVerificationType: 'serviceVerificationType',
-  chains: 'chains',
-  interopProtocols: 'interopProtocols',
-  serviceFee: 'serviceFee',
-  authMethod: 'authMethod',
-  jwtSettings: 'jwtSettings',
-  zkProofSupport: 'zkProofSupport',
-  privacyLevel: 'privacyLevel',
-  complianceFramework: 'complianceFramework',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ServiceScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  name: 'name',
+  username: 'username',
   description: 'description',
-  endpoint: 'endpoint',
-  proofOfService: 'proofOfService',
-  serviceCategory: 'serviceCategory',
-  authMethod: 'authMethod',
-  accessLevel: 'accessLevel',
-  rateLimits: 'rateLimits',
-  zkRequirements: 'zkRequirements',
-  complianceChecks: 'complianceChecks',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.PlatformScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  platformType: 'platformType',
+  image: 'image',
+  provider: 'provider',
+  providerId: 'providerId',
   email: 'email',
-  permissionLevel: 'permissionLevel',
-  zkCapabilities: 'zkCapabilities',
+  walletAddress: 'walletAddress',
+  createdAt: 'createdAt',
+  timestamp: 'timestamp',
+  lastUpdated: 'lastUpdated',
+  metadata: 'metadata'
+};
+
+exports.Prisma.ContractUserScalarFieldEnum = {
+  id: 'id',
+  walletAddress: 'walletAddress',
+  contractData: 'contractData',
+  syncedToBackend: 'syncedToBackend',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContractScalarFieldEnum = {
-  id: 'id',
-  platformId: 'platformId',
-  name: 'name',
-  chain: 'chain',
-  address: 'address',
-  abi: 'abi',
-  zkProofRequirements: 'zkProofRequirements',
-  complianceStatus: 'complianceStatus',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.PlatformAccessScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  platformId: 'platformId',
-  grantedServices: 'grantedServices',
-  accessType: 'accessType',
-  permissions: 'permissions',
-  expiresAt: 'expiresAt',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContractPermissionScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  jwtToken: 'jwtToken',
-  permissions: 'permissions',
-  grantedAt: 'grantedAt',
-  expiresAt: 'expiresAt',
-  isActive: 'isActive'
-};
-
-exports.Prisma.JWTTokenScalarFieldEnum = {
-  id: 'id',
-  token: 'token',
-  providerId: 'providerId',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  permissions: 'permissions',
-  zkProofHash: 'zkProofHash',
-  issuedAt: 'issuedAt',
-  expiresAt: 'expiresAt',
-  isRevoked: 'isRevoked'
-};
-
-exports.Prisma.ServiceSubscriptionScalarFieldEnum = {
-  id: 'id',
-  platformId: 'platformId',
-  serviceId: 'serviceId',
-  providerId: 'providerId',
-  accessLevel: 'accessLevel',
-  contractAccess: 'contractAccess',
-  subscribedAt: 'subscribedAt',
-  expiresAt: 'expiresAt',
-  isActive: 'isActive'
-};
-
-exports.Prisma.PlatformAccessTokenScalarFieldEnum = {
-  id: 'id',
-  platformId: 'platformId',
-  providerId: 'providerId',
-  token: 'token',
-  serviceIds: 'serviceIds',
-  permissions: 'permissions',
-  zkProofRequired: 'zkProofRequired',
-  issuedAt: 'issuedAt',
-  expiresAt: 'expiresAt',
-  isActive: 'isActive'
-};
-
-exports.Prisma.ServicePermissionScalarFieldEnum = {
-  id: 'id',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  providerId: 'providerId',
-  accessGranted: 'accessGranted',
-  jwtToken: 'jwtToken',
-  grantedAt: 'grantedAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AccessLogScalarFieldEnum = {
-  id: 'id',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  providerId: 'providerId',
-  action: 'action',
-  zkProofHash: 'zkProofHash',
-  metadata: 'metadata',
-  timestamp: 'timestamp'
-};
-
-exports.Prisma.UsageQuotaScalarFieldEnum = {
-  id: 'id',
-  contractPermissionId: 'contractPermissionId',
-  maxRequests: 'maxRequests',
-  usedRequests: 'usedRequests',
-  timeWindow: 'timeWindow',
-  renewalPeriod: 'renewalPeriod',
-  lastReset: 'lastReset',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ComplianceAuditScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  serviceId: 'serviceId',
-  framework: 'framework',
-  status: 'status',
-  auditData: 'auditData',
-  auditDate: 'auditDate',
-  expiresAt: 'expiresAt'
-};
-
-exports.Prisma.ZKProofVerificationScalarFieldEnum = {
-  id: 'id',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  proofType: 'proofType',
-  proofHash: 'proofHash',
-  publicInputs: 'publicInputs',
-  isValid: 'isValid',
-  verifiedAt: 'verifiedAt'
 };
 
 exports.Prisma.GameResultScalarFieldEnum = {
@@ -316,203 +124,57 @@ exports.Prisma.GameResultScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FootballMatchScalarFieldEnum = {
+  id: 'id',
+  fixtureId: 'fixtureId',
+  homeTeam: 'homeTeam',
+  awayTeam: 'awayTeam',
+  homeTeamId: 'homeTeamId',
+  awayTeamId: 'awayTeamId',
+  homeScore: 'homeScore',
+  awayScore: 'awayScore',
+  status: 'status',
+  matchDate: 'matchDate',
+  league: 'league',
+  leagueId: 'leagueId',
+  season: 'season',
+  venue: 'venue',
+  lastUpdated: 'lastUpdated',
+  createdAt: 'createdAt',
+  metadata: 'metadata'
+};
+
+exports.Prisma.BetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fixtureId: 'fixtureId',
+  prediction: 'prediction',
+  betType: 'betType',
+  amount: 'amount',
+  odds: 'odds',
+  potentialWin: 'potentialWin',
+  status: 'status',
+  settledAt: 'settledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
-
-exports.Prisma.JsonNullValueInput = {
-  JsonNull: Prisma.JsonNull
-};
-
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-exports.ServiceType = exports.$Enums.ServiceType = {
-  IDENTITY_VERIFICATION: 'IDENTITY_VERIFICATION',
-  ASSET_TOKENIZATION: 'ASSET_TOKENIZATION',
-  COMPLIANCE_ORACLE: 'COMPLIANCE_ORACLE',
-  ZK_PROOF_SERVICE: 'ZK_PROOF_SERVICE',
-  PRIVACY_BRIDGE: 'PRIVACY_BRIDGE',
-  REGULATORY_REPORTING: 'REGULATORY_REPORTING',
-  KYC_VERIFICATION: 'KYC_VERIFICATION',
-  AML_MONITORING: 'AML_MONITORING',
-  CROSS_CHAIN_BRIDGE: 'CROSS_CHAIN_BRIDGE',
-  ATTESTATION_SERVICE: 'ATTESTATION_SERVICE'
-};
-
-exports.RWAType = exports.$Enums.RWAType = {
-  REAL_ESTATE: 'REAL_ESTATE',
-  COMMODITIES: 'COMMODITIES',
-  SECURITIES: 'SECURITIES',
-  INTELLECTUAL_PROPERTY: 'INTELLECTUAL_PROPERTY',
-  CARBON_CREDITS: 'CARBON_CREDITS',
-  SUPPLY_CHAIN_ASSETS: 'SUPPLY_CHAIN_ASSETS',
-  ENERGY_CERTIFICATES: 'ENERGY_CERTIFICATES',
-  INSURANCE_POLICIES: 'INSURANCE_POLICIES',
-  TREASURY_BONDS: 'TREASURY_BONDS',
-  PRIVATE_EQUITY: 'PRIVATE_EQUITY'
-};
-
-exports.VerificationLayer = exports.$Enums.VerificationLayer = {
-  ZK_SNARKS: 'ZK_SNARKS',
-  ZK_STARKS: 'ZK_STARKS',
-  BULLETPROOFS: 'BULLETPROOFS',
-  PLONK: 'PLONK',
-  GROTH16: 'GROTH16',
-  MARLIN: 'MARLIN',
-  SONIC: 'SONIC',
-  MULTI_PARTY_COMPUTATION: 'MULTI_PARTY_COMPUTATION',
-  HOMOMORPHIC_ENCRYPTION: 'HOMOMORPHIC_ENCRYPTION',
-  DIFFERENTIAL_PRIVACY: 'DIFFERENTIAL_PRIVACY',
-  SECURE_ENCLAVES: 'SECURE_ENCLAVES',
-  MERKLE_TREES: 'MERKLE_TREES',
-  COMMITMENT_SCHEMES: 'COMMITMENT_SCHEMES',
-  RING_SIGNATURES: 'RING_SIGNATURES'
-};
-
-exports.InteractionLayer = exports.$Enums.InteractionLayer = {
-  POLYGON_ZKEVM: 'POLYGON_ZKEVM',
-  ARBITRUM_STYLUS: 'ARBITRUM_STYLUS',
-  OPTIMISM_BEDROCK: 'OPTIMISM_BEDROCK',
-  STARKNET: 'STARKNET',
-  AZTEC_NOIR: 'AZTEC_NOIR',
-  SCROLL: 'SCROLL',
-  LINEA: 'LINEA',
-  CHAINLINK_CCIP: 'CHAINLINK_CCIP',
-  WORMHOLE: 'WORMHOLE',
-  LAYERZERO: 'LAYERZERO',
-  IBC_PROTOCOL: 'IBC_PROTOCOL',
-  TORNADO_CASH: 'TORNADO_CASH',
-  RAILGUN: 'RAILGUN',
-  AZTEC_CONNECT: 'AZTEC_CONNECT'
-};
-
-exports.ServiceVerificationType = exports.$Enums.ServiceVerificationType = {
-  BIOMETRIC_ZK: 'BIOMETRIC_ZK',
-  DOCUMENT_ZK_PROOF: 'DOCUMENT_ZK_PROOF',
-  IDENTITY_NULLIFIER: 'IDENTITY_NULLIFIER',
-  SELECTIVE_DISCLOSURE: 'SELECTIVE_DISCLOSURE',
-  RANGE_PROOF: 'RANGE_PROOF',
-  MEMBERSHIP_PROOF: 'MEMBERSHIP_PROOF',
-  NON_MEMBERSHIP_PROOF: 'NON_MEMBERSHIP_PROOF',
-  THRESHOLD_SIGNATURE: 'THRESHOLD_SIGNATURE',
-  MULTI_SIG_ZK: 'MULTI_SIG_ZK',
-  TIME_LOCK_PUZZLE: 'TIME_LOCK_PUZZLE'
-};
-
-exports.AuthMethod = exports.$Enums.AuthMethod = {
-  JWT: 'JWT',
-  OAUTH2: 'OAUTH2',
-  API_KEY: 'API_KEY',
-  ZK_PROOF: 'ZK_PROOF',
-  MULTI_SIG: 'MULTI_SIG'
-};
-
-exports.PrivacyLevel = exports.$Enums.PrivacyLevel = {
-  PUBLIC: 'PUBLIC',
-  PSEUDONYMOUS: 'PSEUDONYMOUS',
-  ANONYMOUS: 'ANONYMOUS',
-  ZERO_KNOWLEDGE: 'ZERO_KNOWLEDGE',
-  PERFECT_PRIVACY: 'PERFECT_PRIVACY'
-};
-
-exports.InteropProtocol = exports.$Enums.InteropProtocol = {
-  COSMOS_IBC: 'COSMOS_IBC',
-  POLKADOT_XCMP: 'POLKADOT_XCMP',
-  CHAINLINK_CCIP: 'CHAINLINK_CCIP',
-  LAYERZERO_V2: 'LAYERZERO_V2',
-  WORMHOLE_V3: 'WORMHOLE_V3',
-  AXELAR_GMP: 'AXELAR_GMP',
-  HYPERLANE: 'HYPERLANE',
-  IBC_PROTOCOL: 'IBC_PROTOCOL'
-};
-
-exports.ZKProofType = exports.$Enums.ZKProofType = {
-  IDENTITY_PROOF: 'IDENTITY_PROOF',
-  ASSET_OWNERSHIP: 'ASSET_OWNERSHIP',
-  COMPLIANCE_PROOF: 'COMPLIANCE_PROOF',
-  SOLVENCY_PROOF: 'SOLVENCY_PROOF',
-  RANGE_PROOF: 'RANGE_PROOF',
-  SET_MEMBERSHIP: 'SET_MEMBERSHIP',
-  NON_INCLUSION: 'NON_INCLUSION',
-  COMPUTATION_INTEGRITY: 'COMPUTATION_INTEGRITY'
-};
-
-exports.ComplianceFramework = exports.$Enums.ComplianceFramework = {
-  GDPR: 'GDPR',
-  CCPA: 'CCPA',
-  SOX: 'SOX',
-  MIFID_II: 'MIFID_II',
-  BASEL_III: 'BASEL_III',
-  FATCA: 'FATCA',
-  CRS: 'CRS',
-  PCI_DSS: 'PCI_DSS',
-  ISO_27001: 'ISO_27001',
-  NIST_FRAMEWORK: 'NIST_FRAMEWORK'
-};
-
-exports.ProofOfServiceType = exports.$Enums.ProofOfServiceType = {
-  MERKLE_PROOF: 'MERKLE_PROOF',
-  ZK_SNARK: 'ZK_SNARK',
-  SIGNATURE: 'SIGNATURE',
-  ATTESTATION: 'ATTESTATION'
-};
-
-exports.ServiceCategory = exports.$Enums.ServiceCategory = {
-  VERIFICATION: 'VERIFICATION',
-  ORACLE: 'ORACLE',
-  BRIDGE: 'BRIDGE',
-  COMPLIANCE: 'COMPLIANCE'
-};
-
-exports.AccessLevel = exports.$Enums.AccessLevel = {
-  READ: 'READ',
-  WRITE: 'WRITE',
-  ADMIN: 'ADMIN',
-  ZK_VERIFY: 'ZK_VERIFY'
-};
-
-exports.PlatformType = exports.$Enums.PlatformType = {
-  DEFI: 'DEFI',
-  NFT: 'NFT',
-  DAO: 'DAO',
-  EXCHANGE: 'EXCHANGE',
-  WALLET: 'WALLET'
-};
-
-exports.PermissionLevel = exports.$Enums.PermissionLevel = {
-  BASIC: 'BASIC',
-  PREMIUM: 'PREMIUM',
-  ENTERPRISE: 'ENTERPRISE'
-};
-
-exports.ComplianceStatus = exports.$Enums.ComplianceStatus = {
-  COMPLIANT: 'COMPLIANT',
-  PENDING: 'PENDING',
-  NON_COMPLIANT: 'NON_COMPLIANT'
-};
-
-exports.AccessType = exports.$Enums.AccessType = {
-  ALL: 'ALL',
-  SELECTED: 'SELECTED'
+exports.LoginProvider = exports.$Enums.LoginProvider = {
+  WALLET: 'WALLET',
+  GOOGLE: 'GOOGLE',
+  FACEBOOK: 'FACEBOOK',
+  TWITTER: 'TWITTER',
+  DISCORD: 'DISCORD',
+  EMAIL: 'EMAIL'
 };
 
 exports.GameStatus = exports.$Enums.GameStatus = {
@@ -528,50 +190,93 @@ exports.GameOutcome = exports.$Enums.GameOutcome = {
 };
 
 exports.Prisma.ModelName = {
-  Provider: 'Provider',
-  Service: 'Service',
-  Platform: 'Platform',
-  Contract: 'Contract',
-  PlatformAccess: 'PlatformAccess',
-  ContractPermission: 'ContractPermission',
-  JWTToken: 'JWTToken',
-  ServiceSubscription: 'ServiceSubscription',
-  PlatformAccessToken: 'PlatformAccessToken',
-  ServicePermission: 'ServicePermission',
-  AccessLog: 'AccessLog',
-  UsageQuota: 'UsageQuota',
-  ComplianceAudit: 'ComplianceAudit',
-  ZKProofVerification: 'ZKProofVerification',
-  GameResult: 'GameResult'
+  UserProfile: 'UserProfile',
+  ContractUser: 'ContractUser',
+  GameResult: 'GameResult',
+  FootballMatch: 'FootballMatch',
+  Bet: 'Bet'
 };
-
 /**
- * This is a stub Prisma Client that will error at runtime if called.
+ * Create the Client
  */
-class PrismaClient {
-  constructor() {
-    return new Proxy(this, {
-      get(target, prop) {
-        let message
-        const runtime = getRuntime()
-        if (runtime.isEdge) {
-          message = `PrismaClient is not configured to run in ${runtime.prettyName}. In order to run Prisma Client on edge runtime, either:
-- Use Prisma Accelerate: https://pris.ly/d/accelerate
-- Use Driver Adapters: https://pris.ly/d/driver-adapters
-`;
-        } else {
-          message = 'PrismaClient is unable to run in this browser environment, or has been bundled for the browser (running in `' + runtime.prettyName + '`).'
-        }
-
-        message += `
-If this is unexpected, please open an issue: https://pris.ly/prisma-prisma-bug-report`
-
-        throw new Error(message)
+const config = {
+  "generator": {
+    "name": "client",
+    "provider": {
+      "fromEnvVar": null,
+      "value": "prisma-client-js"
+    },
+    "output": {
+      "value": "C:\\Users\\patri\\Documents\\CLEINT WORK\\oracle\\prisma\\generated\\prisma",
+      "fromEnvVar": null
+    },
+    "config": {
+      "engineType": "library"
+    },
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "windows",
+        "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "linux-arm64-openssl-3.0.x"
       }
-    })
+    ],
+    "previewFeatures": [],
+    "sourceFilePath": "C:\\Users\\patri\\Documents\\CLEINT WORK\\oracle\\prisma\\schema.prisma",
+    "isCustomOutput": true
+  },
+  "relativeEnvPaths": {
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
+  },
+  "relativePath": "../..",
+  "clientVersion": "6.16.1",
+  "engineVersion": "1c57fdcd7e44b29b9313256c76699e91c3ac3c43",
+  "datasourceNames": [
+    "db"
+  ],
+  "activeProvider": "mongodb",
+  "postinstall": false,
+  "inlineDatasources": {
+    "db": {
+      "url": {
+        "fromEnvVar": "DATABASE_URL",
+        "value": null
+      }
+    }
+  },
+  "inlineSchema": "// This is your Prisma schema file for MongoDB\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./generated/prisma\"\n  binaryTargets = [\"native\", \"linux-arm64-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// Login Provider Types\nenum LoginProvider {\n  WALLET\n  GOOGLE\n  FACEBOOK\n  TWITTER\n  DISCORD\n  EMAIL\n}\n\n// User Profile Model\nmodel UserProfile {\n  id            String        @id @default(auto()) @map(\"_id\") @db.ObjectId\n  user          String        @unique // Wallet address or provider:providerId\n  name          String\n  username      String        @unique\n  description   String?\n  image         String? // IPFS URL or external URL\n  provider      LoginProvider @default(WALLET)\n  providerId    String? // For social login providers\n  email         String?\n  walletAddress String? // Optional wallet link for social login users\n  createdAt     DateTime      @default(now())\n  timestamp     DateTime      @default(now())\n  lastUpdated   DateTime      @updatedAt\n  metadata      Json? // Additional user metadata\n\n  @@map(\"user_profiles\")\n}\n\n// Contract User Model (for blockchain integration)\nmodel ContractUser {\n  id              String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  walletAddress   String   @unique\n  contractData    Json // Data from smart contract\n  syncedToBackend Boolean  @default(false)\n  createdAt       DateTime @default(now())\n  updatedAt       DateTime @updatedAt\n\n  @@map(\"contract_users\")\n}\n\n// Game Results for betting oracle\nenum GameStatus {\n  COMPLETED\n  PENDING\n  CANCELLED\n}\n\nenum GameOutcome {\n  WIN\n  LOSE\n  DRAW\n}\n\nmodel GameResult {\n  id        String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  gameId    String      @unique\n  status    GameStatus\n  outcome   GameOutcome\n  winner    String?\n  loser     String?\n  score     Json? // { player1: number, player2: number }\n  provider  String\n  createdAt DateTime    @default(now())\n  updatedAt DateTime    @updatedAt\n\n  @@map(\"game_results\")\n}\n\n// Football Match Results (for caching and historical data)\nmodel FootballMatch {\n  id          String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  fixtureId   Int      @unique // API-Football fixture ID\n  homeTeam    String\n  awayTeam    String\n  homeTeamId  Int\n  awayTeamId  Int\n  homeScore   Int?\n  awayScore   Int?\n  status      String // NS, FT, 1H, 2H, etc.\n  matchDate   DateTime\n  league      String\n  leagueId    Int\n  season      Int\n  venue       String?\n  lastUpdated DateTime @updatedAt\n  createdAt   DateTime @default(now())\n  metadata    Json? // Additional match data\n\n  @@map(\"football_matches\")\n}\n\n// Betting Records (optional - for storing bets)\nmodel Bet {\n  id           String    @id @default(auto()) @map(\"_id\") @db.ObjectId\n  userId       String // Reference to user\n  fixtureId    Int // Football match fixture ID\n  prediction   String // User's prediction (team name, over/under, etc.)\n  betType      String // win, draw, over, under, etc.\n  amount       Float\n  odds         Float\n  potentialWin Float\n  status       String // pending, won, lost, cancelled\n  settledAt    DateTime?\n  createdAt    DateTime  @default(now())\n  updatedAt    DateTime  @updatedAt\n\n  @@map(\"bets\")\n}\n",
+  "inlineSchemaHash": "8e7dfff39c6bd176db84878706adf274b27b7be0664238a6aac09a21c5b93671",
+  "copyEngine": true
+}
+config.dirname = '/'
+
+config.runtimeDataModel = JSON.parse("{\"models\":{\"UserProfile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"user\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"enum\",\"type\":\"LoginProvider\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"walletAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lastUpdated\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":\"user_profiles\"},\"ContractUser\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"walletAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contractData\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"syncedToBackend\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"contract_users\"},\"GameResult\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"gameId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"GameStatus\"},{\"name\":\"outcome\",\"kind\":\"enum\",\"type\":\"GameOutcome\"},{\"name\":\"winner\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"loser\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"score\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"game_results\"},\"FootballMatch\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"fixtureId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"homeTeam\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"awayTeam\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"homeTeamId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"awayTeamId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"homeScore\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"awayScore\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"matchDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"league\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"leagueId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"season\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"venue\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastUpdated\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":\"football_matches\"},\"Bet\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"_id\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fixtureId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"prediction\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"betType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"odds\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"potentialWin\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"settledAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"bets\"}},\"enums\":{},\"types\":{}}")
+defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
+config.engineWasm = {
+  getRuntime: async () => require('./query_engine_bg.js'),
+  getQueryEngineWasmModule: async () => {
+    const loader = (await import('#wasm-engine-loader')).default
+    const engine = (await loader).default
+    return engine
   }
 }
+config.compilerWasm = undefined
 
+config.injectableEdgeEnv = () => ({
+  parsed: {
+    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
+  }
+})
+
+if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
+  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
+}
+
+const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
-
 Object.assign(exports, Prisma)
+

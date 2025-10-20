@@ -1,64 +1,37 @@
-// Mock database interface - no actual database connection
-export const prisma = {
-  gameResult: {
-    findUnique: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    findMany: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    create: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    upsert: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    }
-  },
-  // Mock platform methods for compatibility
-  platform: {
-    findUnique: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    findMany: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    create: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    update: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    delete: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    }
-  },
-  platformAccess: {
-    deleteMany: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    updateMany: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    }
-  },
-  platformAccessToken: {
-    deleteMany: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    },
-    updateMany: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    }
-  },
-  serviceSubscription: {
-    deleteMany: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    }
-  },
-  contract: {
-    deleteMany: async (args: any) => {
-      throw new Error('Database unavailable - using mock data');
-    }
-  },
-  $transaction: async (operations: any[]) => {
-    throw new Error('Database unavailable - using mock data');
+import { PrismaClient } from '../../prisma/generated/prisma';
+
+// Create a singleton Prisma client instance
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+
+export const prisma = globalForPrisma.prisma || new PrismaClient({
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+});
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+
+// Connect to MongoDB
+export async function connectDB() {
+  try {
+    await prisma.$connect();
+    console.log('✅ MongoDB connected successfully');
+  } catch (error) {
+    console.error('❌ MongoDB connection error:', error);
+    throw error;
   }
-};
+}
+
+// Disconnect from MongoDB
+export async function disconnectDB() {
+  try {
+    await prisma.$disconnect();
+    console.log('✅ MongoDB disconnected successfully');
+  } catch (error) {
+    console.error('❌ MongoDB disconnection error:', error);
+    throw error;
+  }
+}
+
+// Handle graceful shutdown
+process.on('beforeExit', async () => {
+  await disconnectDB();
+});
