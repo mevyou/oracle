@@ -104,20 +104,74 @@ export class FootballService {
   private client = getFootballAPIClient();
 
   /**
-   * Search for a team by name
+   * Search for teams by name (returns all matches)
+   * Frontend should display these for user selection
    */
-  async searchTeam(teamName: string): Promise<Team | null> {
-    const cacheKey = `team:${teamName.toLowerCase()}`;
-    const cached = cache.get<Team>(cacheKey);
+  async searchTeams(teamName: string): Promise<Team[]> {
+    const cacheKey = `teams:${teamName.toLowerCase()}`;
+    const cached = cache.get<Team[]>(cacheKey);
     
     if (cached) {
-      console.log(`[Football Service] Cache hit for team: ${teamName}`);
+      console.log(`[Football Service] Cache hit for teams: ${teamName}`);
       return cached;
     }
 
     try {
       const response = await this.client.get<FootballResponse<Team[]>>('/teams', {
         search: teamName
+      });
+
+      const teams = response.response || [];
+      cache.set(cacheKey, teams, 86400); // Cache for 24 hours
+      return teams;
+    } catch (error) {
+      console.error(`[Football Service] Error searching teams "${teamName}":`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Search for a single team by name (smart selection)
+   * Prioritizes main team over B teams, U23, etc.
+   */
+  async searchTeam(teamName: string): Promise<Team | null> {
+    const teams = await this.searchTeams(teamName);
+    
+    if (teams.length === 0) {
+      return null;
+    }
+
+    // Smart selection: Prioritize main team
+    // Filter out B teams, U23, U21, U18, Women's teams
+    const mainTeam = teams.find(team => {
+      const name = team.name.toLowerCase();
+      return !name.includes(' b') && 
+             !name.includes(' u23') && 
+             !name.includes(' u21') && 
+             !name.includes(' u18') &&
+             !name.includes(' w') &&
+             !name.endsWith('b') &&
+             team.founded !== null; // Main teams usually have founding date
+    });
+
+    return mainTeam || teams[0]; // Fallback to first if no main team found
+  }
+
+  /**
+   * Get team by ID (direct, no ambiguity)
+   */
+  async getTeamById(teamId: number): Promise<Team | null> {
+    const cacheKey = `team:id:${teamId}`;
+    const cached = cache.get<Team>(cacheKey);
+    
+    if (cached) {
+      console.log(`[Football Service] Cache hit for team ID: ${teamId}`);
+      return cached;
+    }
+
+    try {
+      const response = await this.client.get<FootballResponse<Team[]>>('/teams', {
+        id: teamId
       });
 
       if (response.response && response.response.length > 0) {
@@ -128,7 +182,132 @@ export class FootballService {
 
       return null;
     } catch (error) {
-      console.error(`[Football Service] Error searching team "${teamName}":`, error);
+      console.error(`[Football Service] Error getting team by ID ${teamId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all teams from around the world
+   * This fetches teams from all countries and leagues
+   */
+  async getAllTeams(options?: {
+    page?: number;
+    limit?: number;
+    country?: string;
+    league?: number;
+    season?: number;
+  }): Promise<{
+    teams: Team[];
+    total: number;
+    page: number;
+    hasMore: boolean;
+  }> {
+    const cacheKey = `all_teams:${JSON.stringify(options || {})}`;
+    const cached = cache.get<{
+      teams: Team[];
+      total: number;
+      page: number;
+      hasMore: boolean;
+    }>(cacheKey);
+    
+    if (cached) {
+      console.log(`[Football Service] Cache hit for all teams`);
+      return cached;
+    }
+
+    try {
+      console.log(`[Football Service] Fetching all teams from around the world`);
+      
+      // Build query parameters
+      const params: any = {};
+      
+      if (options?.country) {
+        params.country = options.country;
+      }
+      
+      if (options?.league) {
+        params.league = options.league;
+      }
+      
+      if (options?.season) {
+        params.season = options.season;
+      }
+
+      const response = await this.client.get<FootballResponse<Team[]>>('/teams', params);
+
+      const teams = response.response || [];
+      const total = response.paging?.total || teams.length;
+      const currentPage = response.paging?.current || 1;
+      const hasMore = currentPage < (response.paging?.total || 1);
+
+      const result = {
+        teams,
+        total,
+        page: currentPage,
+        hasMore
+      };
+
+      // Cache for 1 hour (teams don't change frequently)
+      cache.set(cacheKey, result, 3600);
+      
+      return result;
+    } catch (error) {
+      console.error(`[Football Service] Error fetching all teams:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all countries available for teams
+   * Returns list of countries with their codes and flags
+   */
+  async getAllCountries(): Promise<{
+    countries: Array<{
+      name: string;
+      code: string;
+      flag: string;
+    }>;
+    total: number;
+  }> {
+    const cacheKey = 'all_countries';
+    const cached = cache.get<{
+      countries: Array<{
+        name: string;
+        code: string;
+        flag: string;
+      }>;
+      total: number;
+    }>(cacheKey);
+    
+    if (cached) {
+      console.log(`[Football Service] Cache hit for all countries`);
+      return cached;
+    }
+
+    try {
+      console.log(`[Football Service] Fetching all countries`);
+      
+      const response = await this.client.get<FootballResponse<Array<{
+        name: string;
+        code: string;
+        flag: string;
+      }>>>('/teams/countries');
+
+      const countries = response.response || [];
+      const total = response.paging?.total || countries.length;
+
+      const result = {
+        countries,
+        total
+      };
+
+      // Cache for 24 hours (countries don't change frequently)
+      cache.set(cacheKey, result, 86400);
+      
+      return result;
+    } catch (error) {
+      console.error(`[Football Service] Error fetching all countries:`, error);
       throw error;
     }
   }
@@ -280,6 +459,79 @@ export class FootballService {
       console.error(`[Football Service] Error getting fixture ${fixtureId}:`, error);
       throw error;
     }
+  }
+
+  /**
+   * Find match between two teams using IDs (recommended for accuracy)
+   */
+  async findMatchByIds(team1Id: number, team2Id: number, options?: {
+    date?: string;
+    season?: number;
+    league?: number;
+  }): Promise<Fixture | null> {
+    try {
+      console.log(`[Football Service] Finding match by IDs: ${team1Id} vs ${team2Id}`);
+      
+      // Get H2H matches
+      const h2hMatches = await this.getHeadToHead(team1Id, team2Id, options?.date ? 20 : 10);
+      
+      // If date is provided, filter by date
+      if (options?.date) {
+        const targetDate = new Date(options.date).toISOString().split('T')[0];
+        const matchOnDate = h2hMatches.find(fixture => {
+          const fixtureDate = new Date(fixture.fixture.date).toISOString().split('T')[0];
+          return fixtureDate === targetDate;
+        });
+        
+        if (matchOnDate) {
+          return matchOnDate;
+        }
+      }
+
+      // If season is provided, filter by season
+      if (options?.season) {
+        const seasonMatches = h2hMatches.filter(fixture => fixture.league.season === options.season);
+        if (seasonMatches.length > 0) {
+          return seasonMatches[0]; // Most recent in that season
+        }
+      }
+
+      // Return most recent match
+      if (h2hMatches.length > 0) {
+        return h2hMatches[0];
+      }
+
+      // If no H2H found, try to find upcoming match
+      const team1Fixtures = await this.getFixturesByTeam(team1Id, { 
+        next: 10,
+        season: options?.season
+      });
+      const upcomingMatch = team1Fixtures.find(fixture => 
+        fixture.teams.away.id === team2Id || fixture.teams.home.id === team2Id
+      );
+
+      return upcomingMatch || null;
+    } catch (error) {
+      console.error('[Football Service] Error finding match by IDs:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get fixtures for current season
+   */
+  async getCurrentSeasonFixtures(teamId: number, options?: {
+    next?: number;
+    last?: number;
+    league?: number;
+  }): Promise<Fixture[]> {
+    const currentYear = new Date().getFullYear();
+    
+    return this.getFixturesByTeam(teamId, {
+      season: currentYear,
+      next: options?.next,
+      last: options?.last
+    });
   }
 
   /**

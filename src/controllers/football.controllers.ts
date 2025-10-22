@@ -2,10 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { footballService } from '../services/footballService';
 
 /**
- * Search for a team by name
+ * Search for teams by name (returns ALL matching teams)
  * GET /api/football/teams/search?name=...
+ * Frontend should display these for user selection
  */
-export const searchTeam = async (req: Request, res: Response, next: NextFunction) => {
+export const searchTeams = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name } = req.query;
 
@@ -16,13 +17,42 @@ export const searchTeam = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-    const team = await footballService.searchTeam(name);
+    const teams = await footballService.searchTeams(name);
 
-    if (!team) {
+    if (teams.length === 0) {
       return res.status(404).json({
-        error: 'Team not found',
+        error: 'No teams found',
         searched: name
       });
+    }
+
+    res.json({
+      success: true,
+      teams,
+      total: teams.length,
+      note: 'Multiple teams found. Frontend should display these for user selection.'
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+/**
+ * Get team by ID (exact match, no ambiguity)
+ * GET /api/football/teams/:id
+ */
+export const getTeamById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: 'Team ID is required' });
+    }
+
+    const team = await footballService.getTeamById(parseInt(id));
+
+    if (!team) {
+      return res.status(404).json({ error: 'Team not found' });
     }
 
     res.json({
@@ -296,6 +326,139 @@ export const getFixtureStatistics = async (req: Request, res: Response, next: Ne
     res.json({
       success: true,
       statistics
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+/**
+ * Find match by team IDs (more accurate than names)
+ * GET /api/football/matches/find-by-ids?team1Id=33&team2Id=40&season=2024
+ */
+export const findMatchByIds = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { team1Id, team2Id, date, season, league } = req.query;
+
+    if (!team1Id || !team2Id) {
+      return res.status(400).json({
+        error: 'Both team IDs are required',
+        example: '/api/football/matches/find-by-ids?team1Id=33&team2Id=40&season=2024'
+      });
+    }
+
+    const match = await footballService.findMatchByIds(
+      parseInt(team1Id as string),
+      parseInt(team2Id as string),
+      {
+        date: date as string | undefined,
+        season: season ? parseInt(season as string) : undefined,
+        league: league ? parseInt(league as string) : undefined
+      }
+    );
+
+    if (!match) {
+      return res.status(404).json({
+        error: 'No match found',
+        params: { team1Id, team2Id, date, season }
+      });
+    }
+
+    res.json({
+      success: true,
+      match
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+/**
+ * Get current season fixtures for a team
+ * GET /api/football/fixtures/current-season?teamId=40&next=5
+ */
+export const getCurrentSeasonFixtures = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { teamId, next, last, league } = req.query;
+
+    if (!teamId) {
+      return res.status(400).json({
+        error: 'Team ID is required',
+        example: '/api/football/fixtures/current-season?teamId=40&next=5'
+      });
+    }
+
+    const fixtures = await footballService.getCurrentSeasonFixtures(
+      parseInt(teamId as string),
+      {
+        next: next ? parseInt(next as string) : undefined,
+        last: last ? parseInt(last as string) : undefined,
+        league: league ? parseInt(league as string) : undefined
+      }
+    );
+
+    const currentYear = new Date().getFullYear();
+
+    res.json({
+      success: true,
+      season: currentYear,
+      fixtures,
+      total: fixtures.length
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+/**
+ * Get all teams from around the world
+ * GET /api/football/teams/all?country=england&league=39&season=2024
+ */
+export const getAllTeams = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { country, league, season, page, limit } = req.query;
+
+    const result = await footballService.getAllTeams({
+      country: country as string,
+      league: league ? parseInt(league as string) : undefined,
+      season: season ? parseInt(season as string) : undefined,
+      page: page ? parseInt(page as string) : undefined,
+      limit: limit ? parseInt(limit as string) : undefined
+    });
+
+    res.json({
+      success: true,
+      teams: result.teams,
+      pagination: {
+        total: result.total,
+        page: result.page,
+        hasMore: result.hasMore
+      },
+      filters: {
+        country: country || 'all',
+        league: league || 'all',
+        season: season || 'all'
+      },
+      note: 'Returns teams from around the world. Use filters to narrow down results.'
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+/**
+ * Get all countries available for teams
+ * GET /api/football/countries
+ */
+export const getAllCountries = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await footballService.getAllCountries();
+
+    res.json({
+      success: true,
+      countries: result.countries,
+      total: result.total,
+      note: 'Returns all countries available for teams. Use country codes in other endpoints.'
     });
   } catch (error: any) {
     next(error);
