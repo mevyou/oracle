@@ -12,7 +12,8 @@
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
-    "test:football": "node test-football-api.js"
+    "test:football": "node test-football-api.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
