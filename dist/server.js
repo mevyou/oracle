@@ -39,8 +39,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const config_1 = __importStar(require("./config/config"));
 const initMockData_1 = require("./initMockData");
+const db_1 = require("./config/db");
 const startServer = async () => {
     try {
+        // Connect to MongoDB
+        try {
+            await (0, db_1.connectDB)();
+            console.log('✅ MongoDB connected - User profiles will be stored in database');
+        }
+        catch (dbError) {
+            console.warn('⚠️  MongoDB connection failed - User profile features may not work');
+            console.warn('   Make sure DATABASE_URL is set in your .env file');
+        }
         // Initialize mock data (always available)
         (0, initMockData_1.initializeMockData)();
         const port = await (0, config_1.findAvailablePort)(config_1.default.port);
@@ -50,8 +60,11 @@ const startServer = async () => {
             console.log(`   - http://localhost:${port}/ (API info & available endpoints)`);
             console.log(`   - http://localhost:${port}/health (Health check)`);
             console.log(`   - http://localhost:${port}/api/results (Game results)`);
-            console.log(`\n💡 Note: Server runs with mock data - no database required!`);
-            console.log(`🎮 Game Results API ready for testing`);
+            console.log(`   - http://localhost:${port}/api/user (User profiles)`);
+            console.log(`   - http://localhost:${port}/api/football (Football data)`);
+            console.log(`\n💡 Note: Game results use mock data`);
+            console.log(`📦 User profiles stored in MongoDB`);
+            console.log(`⚽ Football data from API-Football`);
             console.log(`\n📚 Visit http://localhost:${port}/ to see all available endpoints`);
         });
     }
