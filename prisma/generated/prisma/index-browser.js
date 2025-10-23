@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.8.2
- * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+ * Prisma Client JS version: 6.16.1
+ * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
  */
 Prisma.prismaVersion = {
-  client: "6.8.2",
-  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
+  client: "6.16.1",
+  engine: "1c57fdcd7e44b29b9313256c76699e91c3ac3c43"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -113,194 +113,30 @@ Prisma.NullTypes = {
  * Enums
  */
 
-exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
-  Serializable: 'Serializable'
-});
-
-exports.Prisma.ProviderScalarFieldEnum = {
+exports.Prisma.UserProfileScalarFieldEnum = {
   id: 'id',
+  user: 'user',
   name: 'name',
-  serviceType: 'serviceType',
-  email: 'email',
-  rwaType: 'rwaType',
-  verificationLayer: 'verificationLayer',
-  interactionLayer: 'interactionLayer',
-  logo: 'logo',
-  coverImage: 'coverImage',
-  serviceVerificationType: 'serviceVerificationType',
-  chains: 'chains',
-  interopProtocols: 'interopProtocols',
-  serviceFee: 'serviceFee',
-  authMethod: 'authMethod',
-  jwtSettings: 'jwtSettings',
-  zkProofSupport: 'zkProofSupport',
-  privacyLevel: 'privacyLevel',
-  complianceFramework: 'complianceFramework',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ServiceScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  name: 'name',
+  username: 'username',
   description: 'description',
-  endpoint: 'endpoint',
-  proofOfService: 'proofOfService',
-  serviceCategory: 'serviceCategory',
-  authMethod: 'authMethod',
-  accessLevel: 'accessLevel',
-  rateLimits: 'rateLimits',
-  zkRequirements: 'zkRequirements',
-  complianceChecks: 'complianceChecks',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.PlatformScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  platformType: 'platformType',
+  image: 'image',
+  provider: 'provider',
+  providerId: 'providerId',
   email: 'email',
-  permissionLevel: 'permissionLevel',
-  zkCapabilities: 'zkCapabilities',
+  walletAddress: 'walletAddress',
+  createdAt: 'createdAt',
+  timestamp: 'timestamp',
+  lastUpdated: 'lastUpdated',
+  metadata: 'metadata'
+};
+
+exports.Prisma.ContractUserScalarFieldEnum = {
+  id: 'id',
+  walletAddress: 'walletAddress',
+  contractData: 'contractData',
+  syncedToBackend: 'syncedToBackend',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContractScalarFieldEnum = {
-  id: 'id',
-  platformId: 'platformId',
-  name: 'name',
-  chain: 'chain',
-  address: 'address',
-  abi: 'abi',
-  zkProofRequirements: 'zkProofRequirements',
-  complianceStatus: 'complianceStatus',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.PlatformAccessScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  platformId: 'platformId',
-  grantedServices: 'grantedServices',
-  accessType: 'accessType',
-  permissions: 'permissions',
-  expiresAt: 'expiresAt',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContractPermissionScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  jwtToken: 'jwtToken',
-  permissions: 'permissions',
-  grantedAt: 'grantedAt',
-  expiresAt: 'expiresAt',
-  isActive: 'isActive'
-};
-
-exports.Prisma.JWTTokenScalarFieldEnum = {
-  id: 'id',
-  token: 'token',
-  providerId: 'providerId',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  permissions: 'permissions',
-  zkProofHash: 'zkProofHash',
-  issuedAt: 'issuedAt',
-  expiresAt: 'expiresAt',
-  isRevoked: 'isRevoked'
-};
-
-exports.Prisma.ServiceSubscriptionScalarFieldEnum = {
-  id: 'id',
-  platformId: 'platformId',
-  serviceId: 'serviceId',
-  providerId: 'providerId',
-  accessLevel: 'accessLevel',
-  contractAccess: 'contractAccess',
-  subscribedAt: 'subscribedAt',
-  expiresAt: 'expiresAt',
-  isActive: 'isActive'
-};
-
-exports.Prisma.PlatformAccessTokenScalarFieldEnum = {
-  id: 'id',
-  platformId: 'platformId',
-  providerId: 'providerId',
-  token: 'token',
-  serviceIds: 'serviceIds',
-  permissions: 'permissions',
-  zkProofRequired: 'zkProofRequired',
-  issuedAt: 'issuedAt',
-  expiresAt: 'expiresAt',
-  isActive: 'isActive'
-};
-
-exports.Prisma.ServicePermissionScalarFieldEnum = {
-  id: 'id',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  providerId: 'providerId',
-  accessGranted: 'accessGranted',
-  jwtToken: 'jwtToken',
-  grantedAt: 'grantedAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AccessLogScalarFieldEnum = {
-  id: 'id',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  providerId: 'providerId',
-  action: 'action',
-  zkProofHash: 'zkProofHash',
-  metadata: 'metadata',
-  timestamp: 'timestamp'
-};
-
-exports.Prisma.UsageQuotaScalarFieldEnum = {
-  id: 'id',
-  contractPermissionId: 'contractPermissionId',
-  maxRequests: 'maxRequests',
-  usedRequests: 'usedRequests',
-  timeWindow: 'timeWindow',
-  renewalPeriod: 'renewalPeriod',
-  lastReset: 'lastReset',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ComplianceAuditScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  serviceId: 'serviceId',
-  framework: 'framework',
-  status: 'status',
-  auditData: 'auditData',
-  auditDate: 'auditDate',
-  expiresAt: 'expiresAt'
-};
-
-exports.Prisma.ZKProofVerificationScalarFieldEnum = {
-  id: 'id',
-  contractId: 'contractId',
-  serviceId: 'serviceId',
-  proofType: 'proofType',
-  proofHash: 'proofHash',
-  publicInputs: 'publicInputs',
-  isValid: 'isValid',
-  verifiedAt: 'verifiedAt'
 };
 
 exports.Prisma.GameResultScalarFieldEnum = {
@@ -316,203 +152,57 @@ exports.Prisma.GameResultScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FootballMatchScalarFieldEnum = {
+  id: 'id',
+  fixtureId: 'fixtureId',
+  homeTeam: 'homeTeam',
+  awayTeam: 'awayTeam',
+  homeTeamId: 'homeTeamId',
+  awayTeamId: 'awayTeamId',
+  homeScore: 'homeScore',
+  awayScore: 'awayScore',
+  status: 'status',
+  matchDate: 'matchDate',
+  league: 'league',
+  leagueId: 'leagueId',
+  season: 'season',
+  venue: 'venue',
+  lastUpdated: 'lastUpdated',
+  createdAt: 'createdAt',
+  metadata: 'metadata'
+};
+
+exports.Prisma.BetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fixtureId: 'fixtureId',
+  prediction: 'prediction',
+  betType: 'betType',
+  amount: 'amount',
+  odds: 'odds',
+  potentialWin: 'potentialWin',
+  status: 'status',
+  settledAt: 'settledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
-
-exports.Prisma.JsonNullValueInput = {
-  JsonNull: Prisma.JsonNull
-};
-
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-exports.ServiceType = exports.$Enums.ServiceType = {
-  IDENTITY_VERIFICATION: 'IDENTITY_VERIFICATION',
-  ASSET_TOKENIZATION: 'ASSET_TOKENIZATION',
-  COMPLIANCE_ORACLE: 'COMPLIANCE_ORACLE',
-  ZK_PROOF_SERVICE: 'ZK_PROOF_SERVICE',
-  PRIVACY_BRIDGE: 'PRIVACY_BRIDGE',
-  REGULATORY_REPORTING: 'REGULATORY_REPORTING',
-  KYC_VERIFICATION: 'KYC_VERIFICATION',
-  AML_MONITORING: 'AML_MONITORING',
-  CROSS_CHAIN_BRIDGE: 'CROSS_CHAIN_BRIDGE',
-  ATTESTATION_SERVICE: 'ATTESTATION_SERVICE'
-};
-
-exports.RWAType = exports.$Enums.RWAType = {
-  REAL_ESTATE: 'REAL_ESTATE',
-  COMMODITIES: 'COMMODITIES',
-  SECURITIES: 'SECURITIES',
-  INTELLECTUAL_PROPERTY: 'INTELLECTUAL_PROPERTY',
-  CARBON_CREDITS: 'CARBON_CREDITS',
-  SUPPLY_CHAIN_ASSETS: 'SUPPLY_CHAIN_ASSETS',
-  ENERGY_CERTIFICATES: 'ENERGY_CERTIFICATES',
-  INSURANCE_POLICIES: 'INSURANCE_POLICIES',
-  TREASURY_BONDS: 'TREASURY_BONDS',
-  PRIVATE_EQUITY: 'PRIVATE_EQUITY'
-};
-
-exports.VerificationLayer = exports.$Enums.VerificationLayer = {
-  ZK_SNARKS: 'ZK_SNARKS',
-  ZK_STARKS: 'ZK_STARKS',
-  BULLETPROOFS: 'BULLETPROOFS',
-  PLONK: 'PLONK',
-  GROTH16: 'GROTH16',
-  MARLIN: 'MARLIN',
-  SONIC: 'SONIC',
-  MULTI_PARTY_COMPUTATION: 'MULTI_PARTY_COMPUTATION',
-  HOMOMORPHIC_ENCRYPTION: 'HOMOMORPHIC_ENCRYPTION',
-  DIFFERENTIAL_PRIVACY: 'DIFFERENTIAL_PRIVACY',
-  SECURE_ENCLAVES: 'SECURE_ENCLAVES',
-  MERKLE_TREES: 'MERKLE_TREES',
-  COMMITMENT_SCHEMES: 'COMMITMENT_SCHEMES',
-  RING_SIGNATURES: 'RING_SIGNATURES'
-};
-
-exports.InteractionLayer = exports.$Enums.InteractionLayer = {
-  POLYGON_ZKEVM: 'POLYGON_ZKEVM',
-  ARBITRUM_STYLUS: 'ARBITRUM_STYLUS',
-  OPTIMISM_BEDROCK: 'OPTIMISM_BEDROCK',
-  STARKNET: 'STARKNET',
-  AZTEC_NOIR: 'AZTEC_NOIR',
-  SCROLL: 'SCROLL',
-  LINEA: 'LINEA',
-  CHAINLINK_CCIP: 'CHAINLINK_CCIP',
-  WORMHOLE: 'WORMHOLE',
-  LAYERZERO: 'LAYERZERO',
-  IBC_PROTOCOL: 'IBC_PROTOCOL',
-  TORNADO_CASH: 'TORNADO_CASH',
-  RAILGUN: 'RAILGUN',
-  AZTEC_CONNECT: 'AZTEC_CONNECT'
-};
-
-exports.ServiceVerificationType = exports.$Enums.ServiceVerificationType = {
-  BIOMETRIC_ZK: 'BIOMETRIC_ZK',
-  DOCUMENT_ZK_PROOF: 'DOCUMENT_ZK_PROOF',
-  IDENTITY_NULLIFIER: 'IDENTITY_NULLIFIER',
-  SELECTIVE_DISCLOSURE: 'SELECTIVE_DISCLOSURE',
-  RANGE_PROOF: 'RANGE_PROOF',
-  MEMBERSHIP_PROOF: 'MEMBERSHIP_PROOF',
-  NON_MEMBERSHIP_PROOF: 'NON_MEMBERSHIP_PROOF',
-  THRESHOLD_SIGNATURE: 'THRESHOLD_SIGNATURE',
-  MULTI_SIG_ZK: 'MULTI_SIG_ZK',
-  TIME_LOCK_PUZZLE: 'TIME_LOCK_PUZZLE'
-};
-
-exports.AuthMethod = exports.$Enums.AuthMethod = {
-  JWT: 'JWT',
-  OAUTH2: 'OAUTH2',
-  API_KEY: 'API_KEY',
-  ZK_PROOF: 'ZK_PROOF',
-  MULTI_SIG: 'MULTI_SIG'
-};
-
-exports.PrivacyLevel = exports.$Enums.PrivacyLevel = {
-  PUBLIC: 'PUBLIC',
-  PSEUDONYMOUS: 'PSEUDONYMOUS',
-  ANONYMOUS: 'ANONYMOUS',
-  ZERO_KNOWLEDGE: 'ZERO_KNOWLEDGE',
-  PERFECT_PRIVACY: 'PERFECT_PRIVACY'
-};
-
-exports.InteropProtocol = exports.$Enums.InteropProtocol = {
-  COSMOS_IBC: 'COSMOS_IBC',
-  POLKADOT_XCMP: 'POLKADOT_XCMP',
-  CHAINLINK_CCIP: 'CHAINLINK_CCIP',
-  LAYERZERO_V2: 'LAYERZERO_V2',
-  WORMHOLE_V3: 'WORMHOLE_V3',
-  AXELAR_GMP: 'AXELAR_GMP',
-  HYPERLANE: 'HYPERLANE',
-  IBC_PROTOCOL: 'IBC_PROTOCOL'
-};
-
-exports.ZKProofType = exports.$Enums.ZKProofType = {
-  IDENTITY_PROOF: 'IDENTITY_PROOF',
-  ASSET_OWNERSHIP: 'ASSET_OWNERSHIP',
-  COMPLIANCE_PROOF: 'COMPLIANCE_PROOF',
-  SOLVENCY_PROOF: 'SOLVENCY_PROOF',
-  RANGE_PROOF: 'RANGE_PROOF',
-  SET_MEMBERSHIP: 'SET_MEMBERSHIP',
-  NON_INCLUSION: 'NON_INCLUSION',
-  COMPUTATION_INTEGRITY: 'COMPUTATION_INTEGRITY'
-};
-
-exports.ComplianceFramework = exports.$Enums.ComplianceFramework = {
-  GDPR: 'GDPR',
-  CCPA: 'CCPA',
-  SOX: 'SOX',
-  MIFID_II: 'MIFID_II',
-  BASEL_III: 'BASEL_III',
-  FATCA: 'FATCA',
-  CRS: 'CRS',
-  PCI_DSS: 'PCI_DSS',
-  ISO_27001: 'ISO_27001',
-  NIST_FRAMEWORK: 'NIST_FRAMEWORK'
-};
-
-exports.ProofOfServiceType = exports.$Enums.ProofOfServiceType = {
-  MERKLE_PROOF: 'MERKLE_PROOF',
-  ZK_SNARK: 'ZK_SNARK',
-  SIGNATURE: 'SIGNATURE',
-  ATTESTATION: 'ATTESTATION'
-};
-
-exports.ServiceCategory = exports.$Enums.ServiceCategory = {
-  VERIFICATION: 'VERIFICATION',
-  ORACLE: 'ORACLE',
-  BRIDGE: 'BRIDGE',
-  COMPLIANCE: 'COMPLIANCE'
-};
-
-exports.AccessLevel = exports.$Enums.AccessLevel = {
-  READ: 'READ',
-  WRITE: 'WRITE',
-  ADMIN: 'ADMIN',
-  ZK_VERIFY: 'ZK_VERIFY'
-};
-
-exports.PlatformType = exports.$Enums.PlatformType = {
-  DEFI: 'DEFI',
-  NFT: 'NFT',
-  DAO: 'DAO',
-  EXCHANGE: 'EXCHANGE',
-  WALLET: 'WALLET'
-};
-
-exports.PermissionLevel = exports.$Enums.PermissionLevel = {
-  BASIC: 'BASIC',
-  PREMIUM: 'PREMIUM',
-  ENTERPRISE: 'ENTERPRISE'
-};
-
-exports.ComplianceStatus = exports.$Enums.ComplianceStatus = {
-  COMPLIANT: 'COMPLIANT',
-  PENDING: 'PENDING',
-  NON_COMPLIANT: 'NON_COMPLIANT'
-};
-
-exports.AccessType = exports.$Enums.AccessType = {
-  ALL: 'ALL',
-  SELECTED: 'SELECTED'
+exports.LoginProvider = exports.$Enums.LoginProvider = {
+  WALLET: 'WALLET',
+  GOOGLE: 'GOOGLE',
+  FACEBOOK: 'FACEBOOK',
+  TWITTER: 'TWITTER',
+  DISCORD: 'DISCORD',
+  EMAIL: 'EMAIL'
 };
 
 exports.GameStatus = exports.$Enums.GameStatus = {
@@ -528,21 +218,11 @@ exports.GameOutcome = exports.$Enums.GameOutcome = {
 };
 
 exports.Prisma.ModelName = {
-  Provider: 'Provider',
-  Service: 'Service',
-  Platform: 'Platform',
-  Contract: 'Contract',
-  PlatformAccess: 'PlatformAccess',
-  ContractPermission: 'ContractPermission',
-  JWTToken: 'JWTToken',
-  ServiceSubscription: 'ServiceSubscription',
-  PlatformAccessToken: 'PlatformAccessToken',
-  ServicePermission: 'ServicePermission',
-  AccessLog: 'AccessLog',
-  UsageQuota: 'UsageQuota',
-  ComplianceAudit: 'ComplianceAudit',
-  ZKProofVerification: 'ZKProofVerification',
-  GameResult: 'GameResult'
+  UserProfile: 'UserProfile',
+  ContractUser: 'ContractUser',
+  GameResult: 'GameResult',
+  FootballMatch: 'FootballMatch',
+  Bet: 'Bet'
 };
 
 /**

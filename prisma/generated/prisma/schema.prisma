@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
+// This is your Prisma schema file for MongoDB
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider      = "prisma-client-js"
@@ -11,188 +8,53 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-// Enums
-enum ServiceType {
-  IDENTITY_VERIFICATION
-  ASSET_TOKENIZATION
-  COMPLIANCE_ORACLE
-  ZK_PROOF_SERVICE
-  PRIVACY_BRIDGE
-  REGULATORY_REPORTING
-  KYC_VERIFICATION
-  AML_MONITORING
-  CROSS_CHAIN_BRIDGE
-  ATTESTATION_SERVICE
-}
-
-enum RWAType {
-  REAL_ESTATE
-  COMMODITIES
-  SECURITIES
-  INTELLECTUAL_PROPERTY
-  CARBON_CREDITS
-  SUPPLY_CHAIN_ASSETS
-  ENERGY_CERTIFICATES
-  INSURANCE_POLICIES
-  TREASURY_BONDS
-  PRIVATE_EQUITY
-}
-
-enum VerificationLayer {
-  ZK_SNARKS
-  ZK_STARKS
-  BULLETPROOFS
-  PLONK
-  GROTH16
-  MARLIN
-  SONIC
-  MULTI_PARTY_COMPUTATION
-  HOMOMORPHIC_ENCRYPTION
-  DIFFERENTIAL_PRIVACY
-  SECURE_ENCLAVES
-  MERKLE_TREES
-  COMMITMENT_SCHEMES
-  RING_SIGNATURES
-}
-
-enum InteractionLayer {
-  POLYGON_ZKEVM
-  ARBITRUM_STYLUS
-  OPTIMISM_BEDROCK
-  STARKNET
-  AZTEC_NOIR
-  SCROLL
-  LINEA
-  CHAINLINK_CCIP
-  WORMHOLE
-  LAYERZERO
-  IBC_PROTOCOL
-  TORNADO_CASH
-  RAILGUN
-  AZTEC_CONNECT
-}
-
-enum ServiceVerificationType {
-  BIOMETRIC_ZK
-  DOCUMENT_ZK_PROOF
-  IDENTITY_NULLIFIER
-  SELECTIVE_DISCLOSURE
-  RANGE_PROOF
-  MEMBERSHIP_PROOF
-  NON_MEMBERSHIP_PROOF
-  THRESHOLD_SIGNATURE
-  MULTI_SIG_ZK
-  TIME_LOCK_PUZZLE
-}
-
-enum InteropProtocol {
-  COSMOS_IBC
-  POLKADOT_XCMP
-  CHAINLINK_CCIP
-  LAYERZERO_V2
-  WORMHOLE_V3
-  AXELAR_GMP
-  HYPERLANE
-  IBC_PROTOCOL
-}
-
-enum ZKProofType {
-  IDENTITY_PROOF
-  ASSET_OWNERSHIP
-  COMPLIANCE_PROOF
-  SOLVENCY_PROOF
-  RANGE_PROOF
-  SET_MEMBERSHIP
-  NON_INCLUSION
-  COMPUTATION_INTEGRITY
-}
-
-enum PrivacyLevel {
-  PUBLIC
-  PSEUDONYMOUS
-  ANONYMOUS
-  ZERO_KNOWLEDGE
-  PERFECT_PRIVACY
-}
-
-enum ComplianceFramework {
-  GDPR
-  CCPA
-  SOX
-  MIFID_II
-  BASEL_III
-  FATCA
-  CRS
-  PCI_DSS
-  ISO_27001
-  NIST_FRAMEWORK
-}
-
-enum AuthMethod {
-  JWT
-  OAUTH2
-  API_KEY
-  ZK_PROOF
-  MULTI_SIG
-}
-
-enum AccessLevel {
-  READ
-  WRITE
-  ADMIN
-  ZK_VERIFY
-}
-
-enum JWTAlgorithm {
-  HS256
-  RS256
-  ES256
-  PS256
-}
-
-enum ServiceCategory {
-  VERIFICATION
-  ORACLE
-  BRIDGE
-  COMPLIANCE
-}
-
-enum ProofOfServiceType {
-  MERKLE_PROOF
-  ZK_SNARK
-  SIGNATURE
-  ATTESTATION
-}
-
-enum PlatformType {
-  DEFI
-  NFT
-  DAO
-  EXCHANGE
+// Login Provider Types
+enum LoginProvider {
   WALLET
+  GOOGLE
+  FACEBOOK
+  TWITTER
+  DISCORD
+  EMAIL
 }
 
-enum PermissionLevel {
-  BASIC
-  PREMIUM
-  ENTERPRISE
+// User Profile Model
+model UserProfile {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  user          String        @unique // Wallet address or provider:providerId
+  name          String
+  username      String        @unique
+  description   String?
+  image         String? // IPFS URL or external URL
+  provider      LoginProvider @default(WALLET)
+  providerId    String? // For social login providers
+  email         String?
+  walletAddress String? // Optional wallet link for social login users
+  createdAt     DateTime      @default(now())
+  timestamp     DateTime      @default(now())
+  lastUpdated   DateTime      @updatedAt
+  metadata      Json? // Additional user metadata
+
+  @@map("user_profiles")
 }
 
-enum ComplianceStatus {
-  COMPLIANT
-  PENDING
-  NON_COMPLIANT
+// Contract User Model (for blockchain integration)
+model ContractUser {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  walletAddress   String   @unique
+  contractData    Json // Data from smart contract
+  syncedToBackend Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("contract_users")
 }
 
-enum AccessType {
-  ALL
-  SELECTED
-}
-
+// Game Results for betting oracle
 enum GameStatus {
   COMPLETED
   PENDING
@@ -205,300 +67,8 @@ enum GameOutcome {
   DRAW
 }
 
-// Main Models
-model Provider {
-  id                      Int                     @id @default(autoincrement())
-  name                    String
-  serviceType             ServiceType
-  email                   String                  @unique
-  rwaType                 RWAType
-  verificationLayer       VerificationLayer
-  interactionLayer        InteractionLayer
-  logo                    String?
-  coverImage              String?
-  serviceVerificationType ServiceVerificationType
-  chains                  String[]
-  interopProtocols        InteropProtocol[]
-  serviceFee              Json // ServiceFee object
-  authMethod              AuthMethod
-  jwtSettings             Json // JWTSettings object
-  zkProofSupport          ZKProofType[]
-  privacyLevel            PrivacyLevel
-  complianceFramework     ComplianceFramework[]
-  createdAt               DateTime                @default(now())
-  updatedAt               DateTime                @updatedAt
-
-  // Relations
-  services             Service[]
-  platformAccess       PlatformAccess[]
-  contractPermissions  ContractPermission[]
-  jwtTokens            JWTToken[]
-  serviceSubscriptions ServiceSubscription[]
-  platformAccessTokens PlatformAccessToken[]
-  complianceAudits     ComplianceAudit[]
-  accessLogs           AccessLog[]
-  ServicePermission    ServicePermission[]
-
-  @@map("providers")
-}
-
-model Service {
-  id               String             @id @default(cuid())
-  providerId       Int
-  name             String
-  description      String?
-  endpoint         String
-  proofOfService   ProofOfServiceType
-  serviceCategory  ServiceCategory
-  authMethod       AuthMethod
-  accessLevel      AccessLevel
-  rateLimits       Json // RateLimit object
-  zkRequirements   Json // ZKRequirement[] array
-  complianceChecks Json // ComplianceCheck[] array
-  isActive         Boolean            @default(true)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-
-  // Relations
-  provider             Provider              @relation(fields: [providerId], references: [id])
-  contractPermissions  ContractPermission[]
-  jwtTokens            JWTToken[]
-  serviceSubscriptions ServiceSubscription[]
-  servicePermissions   ServicePermission[]
-  accessLogs           AccessLog[]
-  complianceAudits     ComplianceAudit[]
-  zkProofVerifications ZKProofVerification[]
-
-  @@map("services")
-}
-
-model Platform {
-  id              String          @id @default(cuid())
-  name            String
-  platformType    PlatformType
-  email           String          @unique
-  permissionLevel PermissionLevel
-  zkCapabilities  Json // ZKCapability[] array
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  // Relations
-  contracts            Contract[]
-  serviceSubscriptions ServiceSubscription[]
-  platformAccessTokens PlatformAccessToken[]
-  platformAccess       PlatformAccess[]
-
-  @@map("platforms")
-}
-
-model Contract {
-  id                  String           @id @default(cuid())
-  platformId          String
-  name                String
-  chain               String
-  address             String
-  abi                 Json
-  zkProofRequirements Json // ZKProofRequirement[] array
-  complianceStatus    ComplianceStatus
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-
-  // Relations
-  platform             Platform              @relation(fields: [platformId], references: [id])
-  contractPermissions  ContractPermission[]
-  jwtTokens            JWTToken[]
-  servicePermissions   ServicePermission[]
-  accessLogs           AccessLog[]
-  zkProofVerifications ZKProofVerification[]
-
-  @@map("contracts")
-}
-
-model PlatformAccess {
-  id              String     @id @default(cuid())
-  providerId      Int
-  platformId      String
-  grantedServices String[] // Service IDs
-  accessType      AccessType
-  permissions     Json // Permission[] array
-  expiresAt       DateTime?
-  isActive        Boolean    @default(true)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-
-  // Relations
-  provider Provider @relation(fields: [providerId], references: [id])
-  platform Platform @relation(fields: [platformId], references: [id])
-
-  @@map("platform_access")
-}
-
-model ContractPermission {
-  id          String   @id @default(cuid())
-  providerId  Int
-  contractId  String
-  serviceId   String
-  jwtToken    String
-  permissions Json // Permission[] array
-  grantedAt   DateTime @default(now())
-  expiresAt   DateTime
-  isActive    Boolean  @default(true)
-
-  // Relations
-  provider   Provider    @relation(fields: [providerId], references: [id])
-  contract   Contract    @relation(fields: [contractId], references: [id])
-  service    Service     @relation(fields: [serviceId], references: [id])
-  usageQuota UsageQuota?
-
-  @@map("contract_permissions")
-}
-
-model JWTToken {
-  id          String   @id @default(cuid())
-  token       String   @unique
-  providerId  Int
-  contractId  String?
-  serviceId   String
-  permissions Json // Permission[] array
-  zkProofHash String?
-  issuedAt    DateTime @default(now())
-  expiresAt   DateTime
-  isRevoked   Boolean  @default(false)
-
-  // Relations
-  provider Provider  @relation(fields: [providerId], references: [id])
-  contract Contract? @relation(fields: [contractId], references: [id])
-  service  Service   @relation(fields: [serviceId], references: [id])
-
-  @@map("jwt_tokens")
-}
-
-model ServiceSubscription {
-  id             String      @id @default(cuid())
-  platformId     String
-  serviceId      String
-  providerId     Int
-  accessLevel    AccessLevel
-  contractAccess Json // ContractAccess[] array
-  subscribedAt   DateTime    @default(now())
-  expiresAt      DateTime?
-  isActive       Boolean     @default(true)
-
-  // Relations
-  platform Platform @relation(fields: [platformId], references: [id])
-  service  Service  @relation(fields: [serviceId], references: [id])
-  provider Provider @relation(fields: [providerId], references: [id])
-
-  @@map("service_subscriptions")
-}
-
-model PlatformAccessToken {
-  id              String   @id @default(cuid())
-  platformId      String
-  providerId      Int
-  token           String   @unique
-  serviceIds      String[]
-  permissions     Json // Permission[] array
-  zkProofRequired Boolean  @default(false)
-  issuedAt        DateTime @default(now())
-  expiresAt       DateTime
-  isActive        Boolean  @default(true)
-
-  // Relations
-  platform Platform @relation(fields: [platformId], references: [id])
-  provider Provider @relation(fields: [providerId], references: [id])
-
-  @@map("platform_access_tokens")
-}
-
-model ServicePermission {
-  id            String   @id @default(cuid())
-  contractId    String
-  serviceId     String
-  providerId    Int
-  accessGranted Boolean  @default(false)
-  jwtToken      String?
-  grantedAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  // Relations
-  contract Contract @relation(fields: [contractId], references: [id])
-  service  Service  @relation(fields: [serviceId], references: [id])
-  provider Provider @relation(fields: [providerId], references: [id])
-
-  @@map("service_permissions")
-}
-
-model AccessLog {
-  id          String   @id @default(cuid())
-  contractId  String?
-  serviceId   String
-  providerId  Int
-  action      String
-  zkProofHash String?
-  metadata    Json?
-  timestamp   DateTime @default(now())
-
-  // Relations
-  contract Contract? @relation(fields: [contractId], references: [id])
-  service  Service   @relation(fields: [serviceId], references: [id])
-  provider Provider  @relation(fields: [providerId], references: [id])
-
-  @@map("access_logs")
-}
-
-model UsageQuota {
-  id                   String   @id @default(cuid())
-  contractPermissionId String   @unique
-  maxRequests          Int
-  usedRequests         Int      @default(0)
-  timeWindow           String
-  renewalPeriod        String
-  lastReset            DateTime @default(now())
-  createdAt            DateTime @default(now())
-
-  // Relations
-  contractPermission ContractPermission @relation(fields: [contractPermissionId], references: [id])
-
-  @@map("usage_quotas")
-}
-
-model ComplianceAudit {
-  id         String              @id @default(cuid())
-  providerId Int
-  serviceId  String?
-  framework  ComplianceFramework
-  status     ComplianceStatus
-  auditData  Json
-  auditDate  DateTime            @default(now())
-  expiresAt  DateTime?
-
-  // Relations
-  provider Provider @relation(fields: [providerId], references: [id])
-  service  Service? @relation(fields: [serviceId], references: [id])
-
-  @@map("compliance_audits")
-}
-
-model ZKProofVerification {
-  id           String      @id @default(cuid())
-  contractId   String
-  serviceId    String
-  proofType    ZKProofType
-  proofHash    String
-  publicInputs Json
-  isValid      Boolean
-  verifiedAt   DateTime    @default(now())
-
-  // Relations
-  contract Contract @relation(fields: [contractId], references: [id])
-  service  Service  @relation(fields: [serviceId], references: [id])
-
-  @@map("zk_proof_verifications")
-}
-
 model GameResult {
-  id        String      @id @default(cuid())
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
   gameId    String      @unique
   status    GameStatus
   outcome   GameOutcome
@@ -510,4 +80,45 @@ model GameResult {
   updatedAt DateTime    @updatedAt
 
   @@map("game_results")
+}
+
+// Football Match Results (for caching and historical data)
+model FootballMatch {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  fixtureId   Int      @unique // API-Football fixture ID
+  homeTeam    String
+  awayTeam    String
+  homeTeamId  Int
+  awayTeamId  Int
+  homeScore   Int?
+  awayScore   Int?
+  status      String // NS, FT, 1H, 2H, etc.
+  matchDate   DateTime
+  league      String
+  leagueId    Int
+  season      Int
+  venue       String?
+  lastUpdated DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  metadata    Json? // Additional match data
+
+  @@map("football_matches")
+}
+
+// Betting Records (optional - for storing bets)
+model Bet {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String // Reference to user
+  fixtureId    Int // Football match fixture ID
+  prediction   String // User's prediction (team name, over/under, etc.)
+  betType      String // win, draw, over, under, etc.
+  amount       Float
+  odds         Float
+  potentialWin Float
+  status       String // pending, won, lost, cancelled
+  settledAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("bets")
 }
