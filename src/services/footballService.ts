@@ -582,7 +582,7 @@ export class FootballService {
         // If no H2H found, try to find upcoming match
         const team1Fixtures = await this.getFixturesByTeam(team1.id, { next: 10 });
         const upcomingMatch = team1Fixtures.find(fixture => 
-          fixture.teams.away.id === team2.id || fixture.teams.home.id === team2.id
+          fixture.teams.away.id === team2!.id || fixture.teams.home.id === team2!.id
         );
 
         if (upcomingMatch) {

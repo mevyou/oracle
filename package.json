@@ -1,7 +1,7 @@
 {
   "name": "oracle-betting-backend",
   "version": "1.0.0",
-  "description": "Betting Oracle Backend with MongoDB user profiles and real-time football data integration via API-Football",
+  "description": "Betting Oracle Backend with MongoDB user profiles, real-time sports data, and AI-powered research via X API & xAI",
   "main": "dist/server.js",
   "scripts": {
     "test": "node test-football-api.js",
@@ -13,6 +13,7 @@
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
     "test:football": "node test-football-api.js",
+    "test:aggregator": "node test-aggregator.js",
     "postinstall": "prisma generate"
   },
   "keywords": [],

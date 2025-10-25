@@ -6,6 +6,8 @@ import gameResultsRoutes from './routes/gameResults.routes';
 import apiInfoRoutes from './routes/apiInfo.routes';
 import userRoutes from './routes/user.routes';
 import footballRoutes from './routes/football.routes';
+import basketballRoutes from './routes/basketball.routes';
+import aggregatorRoutes from './routes/aggregator.routes';
 
 const app = express();
 
@@ -19,6 +21,8 @@ app.use('/', apiInfoRoutes); // Main API info and health check
 app.use('/api/results', gameResultsRoutes);
 app.use('/api/user', userRoutes); // User profile management routes
 app.use('/api/football', footballRoutes); // Football data routes
+app.use('/api/basketball', basketballRoutes); // Basketball data routes
+app.use('/api/aggregator', aggregatorRoutes); // X & xAI aggregator routes
 // app.use('/api/platforms', platformRoutes); // Temporarily disabled
 // Global error handler (should be after routes)
 

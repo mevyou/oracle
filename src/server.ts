@@ -27,9 +27,13 @@ const startServer = async () => {
       console.log(`   - http://localhost:${port}/api/results (Game results)`);
       console.log(`   - http://localhost:${port}/api/user (User profiles)`);
       console.log(`   - http://localhost:${port}/api/football (Football data)`);
+      console.log(`   - http://localhost:${port}/api/basketball (Basketball data)`);
+      console.log(`   - http://localhost:${port}/api/aggregator (X & xAI Research)`);
       console.log(`\n💡 Note: Game results use mock data`);
       console.log(`📦 User profiles stored in MongoDB`);
       console.log(`⚽ Football data from API-Football`);
+      console.log(`🏀 Basketball data from API-Sports`);
+      console.log(`🤖 AI Research via X API & xAI`);
       console.log(`\n📚 Visit http://localhost:${port}/ to see all available endpoints`);
     });
   } catch (error) {
